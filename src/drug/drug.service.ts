@@ -105,9 +105,12 @@ export class DrugService {
     return this.prisma.medication.upsert({
       where: { itemSeq: dto.itemSeq ?? undefined },
       update: {
-        name: dto.name,
-        entpName: dto.entpName,
-        itemImage: dto.itemImage,
+        name:       dto.name,
+        entpName:   dto.entpName,
+        itemImage:  dto.itemImage,
+        drugShape:  dto.drugShape,
+        colorClass: dto.colorClass,
+        chart:      dto.chart,
       },
       create: dto,
     })

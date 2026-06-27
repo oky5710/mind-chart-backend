@@ -98,10 +98,13 @@ model HrvAnalysis {
 // ──────────────────────────────────────────
 model Medication {
   id                  String  @id @default(cuid())
-  itemSeq   String? @unique
-  name      String
-  entpName  String?
-  itemImage String?
+  itemSeq    String? @unique
+  name       String
+  entpName   String?
+  itemImage  String?
+  drugShape  String?
+  colorClass String?
+  chart      String?
 
   logs    MedicationLog[]
   changes MedicationChange[]

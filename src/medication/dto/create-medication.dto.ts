@@ -15,4 +15,16 @@ export class CreateMedicationDto {
   @IsOptional()
   @IsString()
   itemImage?: string
+
+  @IsOptional()
+  @IsString()
+  drugShape?: string
+
+  @IsOptional()
+  @IsString()
+  colorClass?: string
+
+  @IsOptional()
+  @IsString()
+  chart?: string
 }
