@@ -101,9 +101,18 @@ model HrvAnalysis {
 // 약 정보 (마스터 테이블)
 // ──────────────────────────────────────────
 model Medication {
-  id          String  @id @default(cuid())
-  name        String  @unique
-  description String?
+  id                  String  @id @default(cuid())
+  itemSeq             String? @unique  // 공공데이터 품목 고유번호
+  name                String          // 약품명
+  entpName            String?         // 제조사
+  efcyQesitm          String?         // 효능/효과
+  useMethodQesitm     String?         // 사용법
+  atpnWarnQesitm      String?         // 경고 주의사항
+  atpnQesitm          String?         // 주의사항
+  intrcQesitm         String?         // 상호작용
+  seQesitm            String?         // 부작용
+  depositMethodQesitm String?         // 보관방법
+  itemImage           String?         // 이미지 URL
 
   logs    MedicationLog[]
   changes MedicationChange[]
