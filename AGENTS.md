@@ -1,6 +1,15 @@
 # Mind Chart
 ## 정신건강을 기록하는 앱
 
+## API 문서 관리 규칙
+
+API가 추가되거나 변경될 때마다 **`api-docs.html`** 파일을 반드시 업데이트해야 한다.
+
+- 파일 위치: 프로젝트 루트 `/api-docs.html`
+- 업데이트 대상: 새 엔드포인트 추가, Request/Response 필드 변경, 열거형(Enum) 값 변경
+- 업데이트 시점: API 코드 작업이 완료된 직후 (커밋 전)
+- 문서 구조: 섹션별 `<table>` — Method, Endpoint, 설명, Request, Response 5개 컬럼
+
 ## 기술 스택
 
 
