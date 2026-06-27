@@ -30,25 +30,13 @@ export class CreateHrvDto {
   tp: number
 
   @IsNumber()
-  tpLog: number
-
-  @IsNumber()
   vlf: number
-
-  @IsNumber()
-  vlfLog: number
 
   @IsNumber()
   lf: number
 
   @IsNumber()
-  lfLog: number
-
-  @IsNumber()
   hf: number
-
-  @IsNumber()
-  hfLog: number
 
   @IsNumber()
   lfNorm: number

@@ -107,13 +107,9 @@
   "rmssd": 38.1,
   "psi": 82.5,
   "tp": 1240.5,
-  "tpLog": 7.12,
   "vlf": 320.1,
-  "vlfLog": 5.77,
   "lf": 480.2,
-  "lfLog": 6.17,
   "hf": 440.2,
-  "hfLog": 6.09,
   "lfNorm": 52.1,
   "hfNorm": 47.9,
   "lfHfRatio": 1.09,
@@ -226,7 +222,9 @@
       <td><span class="method GET">GET</span></td>
       <td class="endpoint">/events</td>
       <td class="desc">이벤트 목록 조회<br><span class="optional">(최신순 정렬)</span></td>
-      <td>없음</td>
+      <td><pre>Query Parameters:
+  date=2024-06-01   // optional
+                    // 특정 날짜 필터</pre></td>
       <td><pre>[
   { "id": "clx...", "date": "...", ... },
   ...
@@ -332,7 +330,9 @@
       <td><span class="method GET">GET</span></td>
       <td class="endpoint">/medications/logs</td>
       <td class="desc">복약 기록 조회<br><span class="optional">(최신순 정렬)</span></td>
-      <td>없음</td>
+      <td><pre>Query Parameters:
+  date=2024-06-01   // optional
+                    // 특정 날짜 필터</pre></td>
       <td><pre>[
   {
     "id": "clx...",

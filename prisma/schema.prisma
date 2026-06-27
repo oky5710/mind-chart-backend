@@ -76,14 +76,10 @@ model HrvAnalysis {
   psi   Float
 
   // Frequency Domain Analysis
-  tp     Float
-  tpLog  Float
-  vlf    Float
-  vlfLog Float
-  lf     Float
-  lfLog  Float
-  hf     Float
-  hfLog  Float
+  tp  Float
+  vlf Float
+  lf  Float
+  hf  Float
 
   lfNorm      Float
   hfNorm      Float
