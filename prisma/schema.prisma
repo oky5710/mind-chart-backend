@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ──────────────────────────────────────────
+// 사용자
+// ──────────────────────────────────────────
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  events            Event[]
+  hrvAnalyses       HrvAnalysis[]
+  medicationLogs    MedicationLog[]
+  medicationChanges MedicationChange[]
+  wearableData      WearableData[]
+}
+
+// ──────────────────────────────────────────
+// 이벤트 (캘린더에 기록하는 정신건강 관련 사건)
+// ──────────────────────────────────────────
+model Event {
+  id          String     @id @default(cuid())
+  userId      String?
+  user        User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date        DateTime   @db.Date
+  type        EventType
+  title       String
+  description String?
+  sentiment   Sentiment
+  intensity   Int
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+enum EventType {
+  FRIEND_MEETING
+  CONCERT
+  RELATIONSHIP_STRESS
+  CONFLICT
+  EXERCISE
+  HOBBY
+  OTHER
+}
+
+enum Sentiment {
+  POSITIVE
+  NEGATIVE
+  NEUTRAL
+}
+
+// ──────────────────────────────────────────
+// HRV(심박변이도) 검사 결과
+// ──────────────────────────────────────────
+model HrvAnalysis {
+  id         Int      @id @default(autoincrement())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  examinedAt DateTime
+  hospital   String?
+  memo       String?
+
+  // Time Domain Analysis
+  mhr   Float
+  sdnn  Float
+  rmssd Float
+  psi   Float
+
+  // Frequency Domain Analysis
+  tp     Float
+  tpLog  Float
+  vlf    Float
+  vlfLog Float
+  lf     Float
+  lfLog  Float
+  hf     Float
+  hfLog  Float
+
+  lfNorm      Float
+  hfNorm      Float
+  lfHfRatio   Float
+  ectopicBeat Float
+
+  // Other
+  srd    Float
+  result String
+
+  createdAt DateTime @default(now())
+}
+
+// ──────────────────────────────────────────
+// 약 정보 (마스터 테이블)
+// ──────────────────────────────────────────
+model Medication {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  description String?
+
+  logs    MedicationLog[]
+  changes MedicationChange[]
+}
+
+// ──────────────────────────────────────────
+// 약 복용 기록 (날짜별 복용 여부)
+// ──────────────────────────────────────────
+model MedicationLog {
+  id           String     @id @default(cuid())
+  userId       String?
+  user         User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  medicationId String
+  medication   Medication @relation(fields: [medicationId], references: [id])
+  date         DateTime   @db.Date
+  dosage       Float
+  taken        Boolean    @default(false)
+  createdAt    DateTime   @default(now())
+
+  @@unique([userId, medicationId, date])
+}
+
+// ──────────────────────────────────────────
+// 약 변동 기록 (처방 변경 이력)
+// ──────────────────────────────────────────
+model MedicationChange {
+  id             String     @id @default(cuid())
+  userId         String?
+  user           User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  medicationId   String
+  medication     Medication @relation(fields: [medicationId], references: [id])
+  date           DateTime   @db.Date
+  changeType     ChangeType
+  previousDosage Float?
+  newDosage      Float?
+  reason         String?
+  createdAt      DateTime   @default(now())
+}
+
+enum ChangeType {
+  STARTED
+  STOPPED
+  DOSAGE_INCREASED
+  DOSAGE_DECREASED
+}
+
+// ──────────────────────────────────────────
+// 웨어러블 데이터 (추후 연동 예정)
+// ──────────────────────────────────────────
+model WearableData {
+  id                   String   @id @default(cuid())
+  userId               String?
+  user                 User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date                 DateTime @db.Date
+  sleepDuration        Float?
+  sleepQuality         Int?
+  heartRateVariability Float?
+  createdAt            DateTime @default(now())
+
+  @@unique([userId, date])
+}
