@@ -6,5 +6,13 @@ export class CreateMedicationDto {
 
   @IsOptional()
   @IsString()
-  description?: string
+  itemSeq?: string
+
+  @IsOptional()
+  @IsString()
+  entpName?: string
+
+  @IsOptional()
+  @IsString()
+  itemImage?: string
 }
