@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query } from '@nestjs/common'
+import { Controller, Get, Post, Delete, Body, Param, Query } from '@nestjs/common'
 import { MedicationService } from './medication.service'
 import { CreateMedicationDto } from './dto/create-medication.dto'
 import { CreateMedicationLogDto } from './dto/create-medication-log.dto'
@@ -36,5 +36,10 @@ export class MedicationController {
   @Get('changes')
   findChanges() {
     return this.medication.findChanges()
+  }
+
+  @Delete(':id')
+  removeMedication(@Param('id') id: string) {
+    return this.medication.removeMedication(id)
   }
 }

@@ -44,4 +44,8 @@ export class MedicationService {
       orderBy: { date: 'desc' },
     })
   }
+
+  removeMedication(id: string) {
+    return this.prisma.medication.delete({ where: { id } })
+  }
 }
