@@ -14,33 +14,5 @@ export class SaveDrugDto {
 
   @IsOptional()
   @IsString()
-  efcyQesitm?: string
-
-  @IsOptional()
-  @IsString()
-  useMethodQesitm?: string
-
-  @IsOptional()
-  @IsString()
-  atpnWarnQesitm?: string
-
-  @IsOptional()
-  @IsString()
-  atpnQesitm?: string
-
-  @IsOptional()
-  @IsString()
-  intrcQesitm?: string
-
-  @IsOptional()
-  @IsString()
-  seQesitm?: string
-
-  @IsOptional()
-  @IsString()
-  depositMethodQesitm?: string
-
-  @IsOptional()
-  @IsString()
   itemImage?: string
 }

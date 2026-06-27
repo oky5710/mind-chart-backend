@@ -107,13 +107,6 @@ export class DrugService {
       update: {
         name: dto.name,
         entpName: dto.entpName,
-        efcyQesitm: dto.efcyQesitm,
-        useMethodQesitm: dto.useMethodQesitm,
-        atpnWarnQesitm: dto.atpnWarnQesitm,
-        atpnQesitm: dto.atpnQesitm,
-        intrcQesitm: dto.intrcQesitm,
-        seQesitm: dto.seQesitm,
-        depositMethodQesitm: dto.depositMethodQesitm,
         itemImage: dto.itemImage,
       },
       create: dto,
