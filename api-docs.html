@@ -742,7 +742,13 @@
         <div class="code-single">
           <div class="code-block">
             <div class="code-label">Response 200</div>
-            <pre>[{ <span class="k">"id"</span>: <span class="s">"clx..."</span>, <span class="k">"name"</span>: <span class="s">"아스피린"</span>, ... }, ...]</pre>
+            <pre>[{
+  <span class="k">"id"</span>:        <span class="s">"clx..."</span>,
+  <span class="k">"itemSeq"</span>:   <span class="s">"200909125"</span>,
+  <span class="k">"name"</span>:      <span class="s">"리소페린정1mg(리스페리돈)"</span>,
+  <span class="k">"entpName"</span>:  <span class="s">"제일약품(주)"</span>,
+  <span class="k">"itemImage"</span>: <span class="s">"https://nedrug.mfds.go.kr/..."</span>
+}]</pre>
           </div>
         </div>
       </div>
@@ -774,7 +780,13 @@
   <span class="k">"date"</span>:         <span class="s">"2024-06-01T00:00:00Z"</span>,
   <span class="k">"dosage"</span>:       <span class="n">1</span>,
   <span class="k">"taken"</span>:        <span class="n">true</span>,
-  ...
+  <span class="k">"medication"</span>: {
+    <span class="k">"id"</span>:        <span class="s">"clx..."</span>,
+    <span class="k">"itemSeq"</span>:   <span class="s">"200909125"</span>,
+    <span class="k">"name"</span>:      <span class="s">"리소페린정1mg(리스페리돈)"</span>,
+    <span class="k">"entpName"</span>:  <span class="s">"제일약품(주)"</span>,
+    <span class="k">"itemImage"</span>: <span class="s">"https://..."</span>
+  }
 }</pre>
           </div>
         </div>
@@ -807,9 +819,18 @@
           <div class="code-block">
             <div class="code-label">Response 200</div>
             <pre>[{
-  <span class="k">"id"</span>:         <span class="s">"clx..."</span>,
-  <span class="k">"medication"</span>: { <span class="k">"name"</span>: <span class="s">"아스피린"</span>, ... },
-  ...
+  <span class="k">"id"</span>:           <span class="s">"clx..."</span>,
+  <span class="k">"medicationId"</span>: <span class="s">"clx..."</span>,
+  <span class="k">"date"</span>:         <span class="s">"2024-06-28T00:00:00Z"</span>,
+  <span class="k">"dosage"</span>:       <span class="n">1</span>,
+  <span class="k">"taken"</span>:        <span class="n">true</span>,
+  <span class="k">"medication"</span>: {
+    <span class="k">"id"</span>:        <span class="s">"clx..."</span>,
+    <span class="k">"itemSeq"</span>:   <span class="s">"200909125"</span>,
+    <span class="k">"name"</span>:      <span class="s">"리소페린정1mg(리스페리돈)"</span>,
+    <span class="k">"entpName"</span>:  <span class="s">"제일약품(주)"</span>,
+    <span class="k">"itemImage"</span>: <span class="s">"https://..."</span>
+  }
 }]</pre>
           </div>
         </div>
@@ -862,10 +883,20 @@
           <div class="code-block">
             <div class="code-label">Response 200</div>
             <pre>[{
-  <span class="k">"id"</span>:         <span class="s">"clx..."</span>,
-  <span class="k">"medication"</span>: { <span class="k">"name"</span>: <span class="s">"아스피린"</span>, ... },
-  <span class="k">"changeType"</span>: <span class="s">"DOSAGE_CHANGE"</span>,
-  ...
+  <span class="k">"id"</span>:              <span class="s">"clx..."</span>,
+  <span class="k">"medicationId"</span>:   <span class="s">"clx..."</span>,
+  <span class="k">"date"</span>:           <span class="s">"2024-06-01T00:00:00Z"</span>,
+  <span class="k">"changeType"</span>:     <span class="s">"DOSAGE_CHANGE"</span>,
+  <span class="k">"previousDosage"</span>: <span class="n">1</span>,
+  <span class="k">"newDosage"</span>:      <span class="n">0.5</span>,
+  <span class="k">"reason"</span>:         <span class="s">"부작용 감량"</span>,
+  <span class="k">"medication"</span>: {
+    <span class="k">"id"</span>:        <span class="s">"clx..."</span>,
+    <span class="k">"itemSeq"</span>:   <span class="s">"200909125"</span>,
+    <span class="k">"name"</span>:      <span class="s">"리소페린정1mg(리스페리돈)"</span>,
+    <span class="k">"entpName"</span>:  <span class="s">"제일약품(주)"</span>,
+    <span class="k">"itemImage"</span>: <span class="s">"https://..."</span>
+  }
 }]</pre>
           </div>
         </div>
