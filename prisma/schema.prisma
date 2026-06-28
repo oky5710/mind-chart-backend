@@ -105,6 +105,7 @@ model Medication {
   drugShape  String?
   colorClass String?
   chart      String?
+  timings    String[]
 
   logs    MedicationLog[]
   changes MedicationChange[]

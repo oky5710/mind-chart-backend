@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator'
+import { IsOptional, IsString, IsArray } from 'class-validator'
 
 export class CreateMedicationDto {
   @IsString()
@@ -27,4 +27,9 @@ export class CreateMedicationDto {
   @IsOptional()
   @IsString()
   chart?: string
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  timings?: string[]
 }
