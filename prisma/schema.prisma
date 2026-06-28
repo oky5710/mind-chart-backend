@@ -25,6 +25,7 @@ model User {
   wearableData      WearableData[]
   exercises         Exercise[]
   coffeeLogs        CoffeeLog[]
+  moodLogs          MoodLog[]
 }
 
 // ──────────────────────────────────────────
@@ -182,6 +183,20 @@ model CoffeeLog {
   shots     Int?
   memo      String?
   createdAt DateTime @default(now())
+}
+
+// ──────────────────────────────────────────
+// 기분 기록 (5점 척도)
+// ──────────────────────────────────────────
+model MoodLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date      DateTime @db.Date
+  score     Int
+  createdAt DateTime @default(now())
+
+  @@unique([userId, date])
 }
 
 // ──────────────────────────────────────────
