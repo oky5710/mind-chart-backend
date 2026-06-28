@@ -8,7 +8,16 @@ import { CreateMedicationChangeDto } from './dto/create-medication-change.dto'
 export class MedicationService {
   constructor(private readonly prisma: PrismaService) {}
 
-  createMedication(dto: CreateMedicationDto) {
+  async createMedication(dto: CreateMedicationDto) {
+    if (dto.itemSeq) {
+      const existing = await this.prisma.medication.findUnique({ where: { itemSeq: dto.itemSeq } })
+      if (existing) {
+        return this.prisma.medication.update({
+          where: { itemSeq: dto.itemSeq },
+          data: { ...dto, deletedAt: null },
+        })
+      }
+    }
     return this.prisma.medication.create({ data: dto })
   }
 
