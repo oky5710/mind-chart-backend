@@ -5,8 +5,9 @@ import { HrvModule } from './hrv/hrv.module'
 import { EventModule } from './event/event.module'
 import { MedicationModule } from './medication/medication.module'
 import { DrugModule } from './drug/drug.module'
+import { ExerciseModule } from './exercise/exercise.module'
 
 @Module({
-  imports: [PrismaModule, AuthModule, HrvModule, EventModule, MedicationModule, DrugModule],
+  imports: [PrismaModule, AuthModule, HrvModule, EventModule, MedicationModule, DrugModule, ExerciseModule],
 })
 export class AppModule {}

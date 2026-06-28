@@ -23,6 +23,7 @@ model User {
   medicationLogs    MedicationLog[]
   medicationChanges MedicationChange[]
   wearableData      WearableData[]
+  exercises         Exercise[]
 }
 
 // ──────────────────────────────────────────
@@ -151,6 +152,21 @@ enum ChangeType {
   STOPPED
   DOSAGE_INCREASED
   DOSAGE_DECREASED
+}
+
+// ──────────────────────────────────────────
+// 운동 기록
+// ──────────────────────────────────────────
+model Exercise {
+  id              String    @id @default(cuid())
+  userId          String?
+  user            User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date            DateTime  @db.Date
+  type            String
+  durationMinutes Int
+  intensity       Int
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 }
 
 // ──────────────────────────────────────────
