@@ -13,7 +13,10 @@ export class MedicationService {
   }
 
   findAllMedications() {
-    return this.prisma.medication.findMany({ orderBy: { name: 'asc' } })
+    return this.prisma.medication.findMany({
+      where: { deletedAt: null },
+      orderBy: { name: 'asc' },
+    })
   }
 
   createLog(dto: CreateMedicationLogDto) {
@@ -45,11 +48,10 @@ export class MedicationService {
     })
   }
 
-  async removeMedication(id: string) {
-    return this.prisma.$transaction(async (tx) => {
-      await tx.medicationLog.deleteMany({ where: { medicationId: id } })
-      await tx.medicationChange.deleteMany({ where: { medicationId: id } })
-      return tx.medication.delete({ where: { id } })
+  removeMedication(id: string) {
+    return this.prisma.medication.update({
+      where: { id },
+      data: { deletedAt: new Date() },
     })
   }
 }

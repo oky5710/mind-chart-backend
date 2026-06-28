@@ -97,8 +97,8 @@ model HrvAnalysis {
 // 약 정보 (마스터 테이블)
 // ──────────────────────────────────────────
 model Medication {
-  id                  String  @id @default(cuid())
-  itemSeq    String? @unique
+  id         String    @id @default(cuid())
+  itemSeq    String?   @unique
   name       String
   entpName   String?
   itemImage  String?
@@ -106,6 +106,7 @@ model Medication {
   colorClass String?
   chart      String?
   timings    String[]
+  deletedAt  DateTime?
 
   logs    MedicationLog[]
   changes MedicationChange[]
