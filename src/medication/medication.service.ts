@@ -45,7 +45,11 @@ export class MedicationService {
     })
   }
 
-  removeMedication(id: string) {
-    return this.prisma.medication.delete({ where: { id } })
+  async removeMedication(id: string) {
+    return this.prisma.$transaction(async (tx) => {
+      await tx.medicationLog.deleteMany({ where: { medicationId: id } })
+      await tx.medicationChange.deleteMany({ where: { medicationId: id } })
+      return tx.medication.delete({ where: { id } })
+    })
   }
 }
