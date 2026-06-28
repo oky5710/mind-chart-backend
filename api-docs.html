@@ -575,9 +575,9 @@
             <div class="code-label">Request Body</div>
             <pre>{
   <span class="k">"date"</span>:        <span class="s">"2024-06-01"</span>,
-  <span class="k">"type"</span>:        <span class="s">"WORK"</span>,
-  <span class="k">"title"</span>:       <span class="s">"발표 준비"</span>,
-  <span class="k">"description"</span>: <span class="s">"중요 발표"</span>,  <span class="c">// optional</span>
+  <span class="k">"type"</span>:        <span class="s">"CONFLICT"</span>,
+  <span class="k">"title"</span>:       <span class="s">"가족과 다툼"</span>,
+  <span class="k">"description"</span>: <span class="s">"심한 말다툼"</span>,  <span class="c">// optional</span>
   <span class="k">"sentiment"</span>:   <span class="s">"NEGATIVE"</span>,
   <span class="k">"intensity"</span>:   <span class="n">4</span>  <span class="c">// 1 ~ 5</span>
 }</pre>
@@ -887,7 +887,7 @@
             <pre>{
   <span class="k">"medicationId"</span>:    <span class="s">"clx..."</span>,
   <span class="k">"date"</span>:            <span class="s">"2024-06-01"</span>,
-  <span class="k">"changeType"</span>:      <span class="s">"DOSAGE_CHANGE"</span>,
+  <span class="k">"changeType"</span>:      <span class="s">"DOSAGE_DECREASED"</span>,
   <span class="k">"previousDosage"</span>:  <span class="n">1.0</span>,  <span class="c">// optional</span>
   <span class="k">"newDosage"</span>:       <span class="n">0.5</span>,  <span class="c">// optional</span>
   <span class="k">"reason"</span>:          <span class="s">"부작용 감량"</span>  <span class="c">// optional</span>
@@ -1091,10 +1091,12 @@
       <div class="enum-name">EventType</div>
       <div class="enum-desc">이벤트 종류</div>
       <div class="enum-values">
-        <span class="enum-val">WORK</span>
-        <span class="enum-val">PERSONAL</span>
-        <span class="enum-val">MEDICAL</span>
-        <span class="enum-val">SOCIAL</span>
+        <span class="enum-val">FRIEND_MEETING</span>
+        <span class="enum-val">CONCERT</span>
+        <span class="enum-val">RELATIONSHIP_STRESS</span>
+        <span class="enum-val">CONFLICT</span>
+        <span class="enum-val">EXERCISE</span>
+        <span class="enum-val">HOBBY</span>
         <span class="enum-val">OTHER</span>
       </div>
     </div>
@@ -1111,11 +1113,10 @@
       <div class="enum-name">ChangeType</div>
       <div class="enum-desc">복약 변경 유형</div>
       <div class="enum-values">
-        <span class="enum-val">START</span>
-        <span class="enum-val">STOP</span>
-        <span class="enum-val">DOSAGE_CHANGE</span>
-        <span class="enum-val">PAUSE</span>
-        <span class="enum-val">RESUME</span>
+        <span class="enum-val">STARTED</span>
+        <span class="enum-val">STOPPED</span>
+        <span class="enum-val">DOSAGE_INCREASED</span>
+        <span class="enum-val">DOSAGE_DECREASED</span>
       </div>
     </div>
   </div>
