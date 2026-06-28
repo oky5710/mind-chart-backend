@@ -200,16 +200,17 @@ model MoodLog {
 }
 
 // ──────────────────────────────────────────
-// 웨어러블 데이터 (추후 연동 예정)
+// 웨어러블 데이터 (Apple Health 연동)
 // ──────────────────────────────────────────
 model WearableData {
   id                   String   @id @default(cuid())
   userId               String?
   user                 User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   date                 DateTime @db.Date
-  sleepDuration        Float?
-  sleepQuality         Int?
-  heartRateVariability Float?
+  sleepDuration        Float?   // 수면 시간 (시간 단위)
+  sleepQuality         Int?     // 수면 품질 1~5
+  heartRate            Float?   // 평균 심박수 (BPM)
+  heartRateVariability Float?   // HRV SDNN (ms, Apple Watch)
   createdAt            DateTime @default(now())
 
   @@unique([userId, date])

@@ -8,8 +8,9 @@ import { DrugModule } from './drug/drug.module'
 import { ExerciseModule } from './exercise/exercise.module'
 import { CoffeeModule } from './coffee/coffee.module'
 import { MoodModule } from './mood/mood.module'
+import { WearableModule } from './wearable/wearable.module'
 
 @Module({
-  imports: [PrismaModule, AuthModule, HrvModule, EventModule, MedicationModule, DrugModule, ExerciseModule, CoffeeModule, MoodModule],
+  imports: [PrismaModule, AuthModule, HrvModule, EventModule, MedicationModule, DrugModule, ExerciseModule, CoffeeModule, MoodModule, WearableModule],
 })
 export class AppModule {}

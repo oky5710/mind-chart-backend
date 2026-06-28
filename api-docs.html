@@ -347,6 +347,7 @@
     <a href="#coffee"><span class="dot" style="background:#D97706"></span>커피 기록</a>
     <a href="#exercises"><span class="dot" style="background:#34D399"></span>운동 기록</a>
     <a href="#moods"><span class="dot" style="background:#F472B6"></span>기분 기록</a>
+    <a href="#wearable"><span class="dot" style="background:#A78BFA"></span>웨어러블</a>
     <div class="nav-section" style="margin-top:8px">참조</div>
     <a href="#enums"><span class="dot"></span>열거형 (Enums)</a>
   </nav>
@@ -1352,6 +1353,120 @@
           <div class="code-block">
             <div class="code-label">Response 200</div>
             <pre>{ <span class="k">"id"</span>: <span class="s">"clx..."</span>, <span class="k">"score"</span>: <span class="n">4</span>, ... }</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEARABLE -->
+  <div class="section-header" id="wearable">
+    <h2>웨어러블</h2><span class="sub">Wearable Data — Apple Health 연동</span>
+  </div>
+
+  <div class="endpoint-card">
+    <!-- POST /wearable -->
+    <div class="endpoint-row">
+      <div class="endpoint-meta">
+        <span class="method POST">POST</span>
+        <span class="endpoint-path">/wearable</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="endpoint-desc">하루치 웨어러블 데이터 저장 — 같은 날짜면 덮어씀 (upsert)</div>
+        <div class="endpoint-note">모든 필드 선택 사항 — 있는 값만 보내면 됨. 수면은 Apple Watch 착용 수면 시 기록됨.</div>
+        <div class="code-pair">
+          <div class="code-block">
+            <div class="code-label">Request Body</div>
+            <pre>{
+  <span class="k">"date"</span>:                 <span class="s">"2026-06-29"</span>,  <span class="req">// required</span>
+  <span class="k">"sleepDuration"</span>:        <span class="n">7.5</span>,            <span class="opt">// optional — 수면 시간 (시간)</span>
+  <span class="k">"sleepQuality"</span>:         <span class="n">4</span>,              <span class="opt">// optional — 수면 품질 1~5</span>
+  <span class="k">"heartRate"</span>:            <span class="n">64.7</span>,           <span class="opt">// optional — 평균 심박수 (BPM)</span>
+  <span class="k">"heartRateVariability"</span>: <span class="n">57.9</span>            <span class="opt">// optional — HRV SDNN (ms)</span>
+}</pre>
+          </div>
+          <div class="code-block">
+            <div class="code-label">Response 200 / 201</div>
+            <pre>{
+  <span class="k">"id"</span>:                    <span class="s">"clx..."</span>,
+  <span class="k">"userId"</span>:               <span class="n">null</span>,
+  <span class="k">"date"</span>:                  <span class="s">"2026-06-29T00:00:00.000Z"</span>,
+  <span class="k">"sleepDuration"</span>:         <span class="n">7.5</span>,
+  <span class="k">"sleepQuality"</span>:          <span class="n">null</span>,
+  <span class="k">"heartRate"</span>:             <span class="n">64.7</span>,
+  <span class="k">"heartRateVariability"</span>:  <span class="n">57.9</span>,
+  <span class="k">"createdAt"</span>:             <span class="s">"2026-06-29T00:00:00.000Z"</span>
+}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- POST /wearable/bulk -->
+    <div class="endpoint-row">
+      <div class="endpoint-meta">
+        <span class="method POST">POST</span>
+        <span class="endpoint-path">/wearable/bulk</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="endpoint-desc">여러 날치 웨어러블 데이터 일괄 저장 — Apple Health 내보내기 연동용</div>
+        <div class="endpoint-note">날짜별 upsert — 이미 있는 날짜는 덮어씀. 100개씩 나눠 보내는 것을 권장.</div>
+        <div class="code-pair">
+          <div class="code-block">
+            <div class="code-label">Request Body</div>
+            <pre>{
+  <span class="k">"data"</span>: [
+    {
+      <span class="k">"date"</span>:                 <span class="s">"2026-06-27"</span>,  <span class="req">// required</span>
+      <span class="k">"sleepDuration"</span>:        <span class="n">7.6</span>,            <span class="opt">// optional</span>
+      <span class="k">"heartRate"</span>:            <span class="n">66.2</span>,           <span class="opt">// optional</span>
+      <span class="k">"heartRateVariability"</span>: <span class="n">65.5</span>            <span class="opt">// optional</span>
+    },
+    {
+      <span class="k">"date"</span>:                 <span class="s">"2026-06-28"</span>,
+      <span class="k">"heartRate"</span>:            <span class="n">69.9</span>,
+      <span class="k">"heartRateVariability"</span>: <span class="n">36.2</span>
+    }
+  ]
+}</pre>
+          </div>
+          <div class="code-block">
+            <div class="code-label">Response 200</div>
+            <pre>[
+  { <span class="k">"date"</span>: <span class="s">"2026-06-27T00:00:00.000Z"</span>, <span class="k">"heartRate"</span>: <span class="n">66.2</span>, ... },
+  { <span class="k">"date"</span>: <span class="s">"2026-06-28T00:00:00.000Z"</span>, <span class="k">"heartRate"</span>: <span class="n">69.9</span>, ... }
+]</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GET /wearable -->
+    <div class="endpoint-row">
+      <div class="endpoint-meta">
+        <span class="method GET">GET</span>
+        <span class="endpoint-path">/wearable</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="endpoint-desc">웨어러블 데이터 조회 — 최신순 정렬</div>
+        <div class="params-label">Query Parameters</div>
+        <table class="param-table">
+          <thead>
+            <tr><th>파라미터</th><th>필수</th><th>타입</th><th>설명</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="pname">date</td>
+              <td><span class="badge opt">optional</span></td>
+              <td>string</td>
+              <td>특정 날짜 필터 (예: <code style="font-size:11px">2026-06-29</code>)</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="code-single" style="margin-top:10px">
+          <div class="code-block">
+            <div class="code-label">Response 200</div>
+            <pre>[{ <span class="k">"date"</span>: <span class="s">"2026-06-29T00:00:00.000Z"</span>, <span class="k">"heartRate"</span>: <span class="n">64.7</span>, <span class="k">"heartRateVariability"</span>: <span class="n">57.9</span>, <span class="k">"sleepDuration"</span>: <span class="n">5.6</span>, ... }]</pre>
           </div>
         </div>
       </div>
