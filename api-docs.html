@@ -773,14 +773,15 @@
         <span class="endpoint-path">/medications/:id</span>
       </div>
       <div class="endpoint-body">
-        <div class="endpoint-desc">등록된 약 삭제</div>
-        <div class="endpoint-note">관련 복약 기록(logs)·변경 기록(changes)도 함께 삭제됨</div>
+        <div class="endpoint-desc">등록된 약 삭제 (소프트 딜리트)</div>
+        <div class="endpoint-note">실제 삭제 없이 deletedAt 타임스탬프만 기록 — 복약·변경 기록은 그대로 유지됨. 목록 조회 시 제외됨.</div>
         <div class="code-single">
           <div class="code-block">
             <div class="code-label">Response 200</div>
             <pre>{
-  <span class="k">"id"</span>:        <span class="s">"clx..."</span>,
-  <span class="k">"name"</span>:      <span class="s">"리소페린정1mg(리스페리돈)"</span>,
+  <span class="k">"id"</span>:          <span class="s">"clx..."</span>,
+  <span class="k">"name"</span>:        <span class="s">"리소페린정1mg(리스페리돈)"</span>,
+  <span class="k">"deletedAt"</span>:   <span class="s">"2026-06-28T01:27:31.332Z"</span>,
   ...
 }</pre>
           </div>
