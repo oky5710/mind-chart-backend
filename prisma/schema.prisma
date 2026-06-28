@@ -24,6 +24,7 @@ model User {
   medicationChanges MedicationChange[]
   wearableData      WearableData[]
   exercises         Exercise[]
+  coffeeLogs        CoffeeLog[]
 }
 
 // ──────────────────────────────────────────
@@ -167,6 +168,20 @@ model Exercise {
   intensity       Int
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+}
+
+// ──────────────────────────────────────────
+// 커피 섭취 기록
+// ──────────────────────────────────────────
+model CoffeeLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date      DateTime
+  type      String?
+  shots     Int?
+  memo      String?
+  createdAt DateTime @default(now())
 }
 
 // ──────────────────────────────────────────
