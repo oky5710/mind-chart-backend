@@ -342,6 +342,7 @@
     <a href="#events"><span class="dot" style="background:#FCA5A5"></span>이벤트</a>
     <a href="#medications"><span class="dot" style="background:#FCD34D"></span>복약 관리</a>
     <a href="#drugs"><span class="dot" style="background:#C4B5FD"></span>약 검색</a>
+    <a href="#coffee"><span class="dot" style="background:#D97706"></span>커피 기록</a>
     <div class="nav-section" style="margin-top:8px">참조</div>
     <a href="#enums"><span class="dot"></span>열거형 (Enums)</a>
   </nav>
@@ -1083,6 +1084,94 @@
           <div class="code-block">
             <div class="code-label">Response 200</div>
             <pre>{ <span class="k">"id"</span>: <span class="s">"clx..."</span>, <span class="k">"name"</span>: <span class="s">"리소페린정1mg(리스페리돈)"</span>, <span class="k">"itemSeq"</span>: <span class="s">"200909125"</span>, ... }</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COFFEE -->
+  <div class="section-header" id="coffee">
+    <h2>커피 기록</h2><span class="sub">Coffee Log</span>
+  </div>
+
+  <div class="endpoint-card">
+    <!-- POST /coffee -->
+    <div class="endpoint-row">
+      <div class="endpoint-meta">
+        <span class="method POST">POST</span>
+        <span class="endpoint-path">/coffee</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="endpoint-desc">커피 섭취 기록 저장</div>
+        <div class="code-pair">
+          <div class="code-block">
+            <div class="code-label">Request Body</div>
+            <pre>{
+  <span class="k">"date"</span>:  <span class="s">"2026-06-28T09:00:00Z"</span>,
+  <span class="k">"type"</span>:  <span class="s">"아메리카노"</span>,  <span class="c">// optional</span>
+  <span class="k">"shots"</span>: <span class="n">2</span>,             <span class="c">// optional — 에스프레소 샷 수</span>
+  <span class="k">"memo"</span>:  <span class="s">"출근길"</span>        <span class="c">// optional</span>
+}</pre>
+          </div>
+          <div class="code-block">
+            <div class="code-label">Response 201</div>
+            <pre>{
+  <span class="k">"id"</span>:        <span class="s">"clx..."</span>,
+  <span class="k">"date"</span>:      <span class="s">"2026-06-28T09:00:00.000Z"</span>,
+  <span class="k">"type"</span>:      <span class="s">"아메리카노"</span>,
+  <span class="k">"shots"</span>:     <span class="n">2</span>,
+  <span class="k">"memo"</span>:      <span class="s">"출근길"</span>,
+  <span class="k">"createdAt"</span>: <span class="s">"2026-06-28T09:00:00.000Z"</span>
+}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GET /coffee -->
+    <div class="endpoint-row">
+      <div class="endpoint-meta">
+        <span class="method GET">GET</span>
+        <span class="endpoint-path">/coffee</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="endpoint-desc">커피 기록 조회 — 최신순 정렬</div>
+        <div class="params-label">Query Parameters</div>
+        <table class="param-table">
+          <thead>
+            <tr><th>파라미터</th><th>필수</th><th>타입</th><th>설명</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="pname">date</td>
+              <td><span class="badge opt">optional</span></td>
+              <td>string</td>
+              <td>특정 날짜 필터 (예: <code style="font-size:11px">2026-06-28</code>)</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="code-single" style="margin-top:10px">
+          <div class="code-block">
+            <div class="code-label">Response 200</div>
+            <pre>[{ <span class="k">"id"</span>: <span class="s">"clx..."</span>, <span class="k">"date"</span>: <span class="s">"2026-06-28T09:00:00.000Z"</span>, <span class="k">"type"</span>: <span class="s">"아메리카노"</span>, <span class="k">"shots"</span>: <span class="n">2</span>, ... }]</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DELETE /coffee/:id -->
+    <div class="endpoint-row">
+      <div class="endpoint-meta">
+        <span class="method DELETE">DELETE</span>
+        <span class="endpoint-path">/coffee/:id</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="endpoint-desc">커피 기록 삭제</div>
+        <div class="code-single">
+          <div class="code-block">
+            <div class="code-label">Response 200</div>
+            <pre>{ <span class="k">"id"</span>: <span class="s">"clx..."</span>, <span class="k">"type"</span>: <span class="s">"아메리카노"</span>, ... }</pre>
           </div>
         </div>
       </div>
