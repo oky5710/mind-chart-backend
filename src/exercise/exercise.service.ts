@@ -7,8 +7,14 @@ export class ExerciseService {
   constructor(private readonly prisma: PrismaService) {}
 
   create(dto: CreateExerciseDto) {
+    const { startedAt, endedAt, ...rest } = dto
     return this.prisma.exercise.create({
-      data: { ...dto, date: new Date(dto.date) },
+      data: {
+        ...rest,
+        date: new Date(dto.date),
+        ...(startedAt !== undefined && { startedAt: new Date(startedAt) }),
+        ...(endedAt !== undefined && { endedAt: new Date(endedAt) }),
+      },
     })
   }
 

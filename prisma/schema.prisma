@@ -168,6 +168,8 @@ model Exercise {
   type            String
   durationMinutes Int
   intensity       Int
+  startedAt       DateTime? // 운동 시작 시각
+  endedAt         DateTime? // 운동 종료 시각
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 }
