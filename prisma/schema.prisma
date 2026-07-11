@@ -23,6 +23,7 @@ model User {
   medicationLogs    MedicationLog[]
   medicationChanges MedicationChange[]
   wearableData      WearableData[]
+  wearableSamples   WearableSample[]
   exercises         Exercise[]
   coffeeLogs        CoffeeLog[]
   moodLogs          MoodLog[]
@@ -200,7 +201,7 @@ model MoodLog {
 }
 
 // ──────────────────────────────────────────
-// 웨어러블 데이터 (Apple Health 연동)
+// 웨어러블 데이터 (Apple Health 연동, 일별 요약)
 // ──────────────────────────────────────────
 model WearableData {
   id                   String   @id @default(cuid())
@@ -214,4 +215,21 @@ model WearableData {
   createdAt            DateTime @default(now())
 
   @@unique([userId, date])
+}
+
+// ──────────────────────────────────────────
+// 웨어러블 원본 샘플 (타임스탬프별 다건 기록 — 애플워치는 HRV를
+// 하루에 여러 번, 대략 2시간 간격으로 측정함)
+// ──────────────────────────────────────────
+model WearableSample {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String   // "heartRate" | "heartRateVariability"
+  timestamp DateTime
+  value     Float
+  createdAt DateTime @default(now())
+
+  @@unique([userId, type, timestamp])
+  @@index([type, timestamp])
 }
