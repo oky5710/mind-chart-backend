@@ -209,6 +209,8 @@ model WearableData {
   user                 User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   date                 DateTime @db.Date
   sleepDuration        Float?   // 수면 시간 (시간 단위)
+  sleepStart           DateTime? // 수면 시작 시각
+  sleepEnd             DateTime? // 수면 종료(기상) 시각
   sleepQuality         Int?     // 수면 품질 1~5
   heartRate            Float?   // 평균 심박수 (BPM)
   heartRateVariability Float?   // HRV SDNN (ms, Apple Watch)

@@ -29,19 +29,24 @@ export class WearableService {
   }
 
   async upsert(dto: UpsertWearableDto) {
-    const { date, ...data } = dto
+    const { date, sleepStart, sleepEnd, ...data } = dto
     const dateObj = this.parseDate(date)
+    const payload = {
+      ...data,
+      ...(sleepStart !== undefined && { sleepStart: this.parseDate(sleepStart) }),
+      ...(sleepEnd !== undefined && { sleepEnd: this.parseDate(sleepEnd) }),
+    }
     const existing = await this.prisma.wearableData.findFirst({
       where: { userId: null, date: dateObj },
     })
     if (existing) {
       return this.prisma.wearableData.update({
         where: { id: existing.id },
-        data,
+        data: payload,
       })
     }
     return this.prisma.wearableData.create({
-      data: { date: dateObj, ...data },
+      data: { date: dateObj, ...payload },
     })
   }
 

@@ -9,6 +9,12 @@ export class UpsertWearableDto {
   sleepDuration?: number
 
   @IsOptional()
+  sleepStart?: any
+
+  @IsOptional()
+  sleepEnd?: any
+
+  @IsOptional()
   @IsInt()
   @Min(1)
   @Max(5)
