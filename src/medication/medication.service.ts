@@ -28,30 +28,31 @@ export class MedicationService {
     })
   }
 
-  createLog(dto: CreateMedicationLogDto) {
+  createLog(userId: string, dto: CreateMedicationLogDto) {
     return this.prisma.medicationLog.create({
-      data: { ...dto, date: new Date(dto.date) },
+      data: { ...dto, userId, date: new Date(dto.date) },
       include: { medication: true },
     })
   }
 
-  findLogs(date?: string) {
+  findLogs(userId: string, date?: string) {
     return this.prisma.medicationLog.findMany({
-      where: { ...(date && { date: new Date(date) }) },
+      where: { userId, ...(date && { date: new Date(date) }) },
       include: { medication: true },
       orderBy: { date: 'desc' },
     })
   }
 
-  createChange(dto: CreateMedicationChangeDto) {
+  createChange(userId: string, dto: CreateMedicationChangeDto) {
     return this.prisma.medicationChange.create({
-      data: { ...dto, date: new Date(dto.date) },
+      data: { ...dto, userId, date: new Date(dto.date) },
       include: { medication: true },
     })
   }
 
-  findChanges() {
+  findChanges(userId: string) {
     return this.prisma.medicationChange.findMany({
+      where: { userId },
       include: { medication: true },
       orderBy: { date: 'desc' },
     })

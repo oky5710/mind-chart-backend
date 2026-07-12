@@ -1,33 +1,39 @@
 import { Controller, Get, Post, Patch, Delete, Body, Param, ParseIntPipe } from '@nestjs/common'
 import { HrvService } from './hrv.service'
 import { CreateHrvDto } from './dto/create-hrv.dto'
+import { CurrentUser } from '../auth/current-user.decorator'
+import type { CurrentUserPayload } from '../auth/current-user.decorator'
 
 @Controller('hrv')
 export class HrvController {
   constructor(private readonly hrv: HrvService) {}
 
   @Post()
-  create(@Body() dto: CreateHrvDto) {
-    return this.hrv.create(dto)
+  create(@CurrentUser() user: CurrentUserPayload, @Body() dto: CreateHrvDto) {
+    return this.hrv.create(user.id, dto)
   }
 
   @Get()
-  findAll() {
-    return this.hrv.findAll()
+  findAll(@CurrentUser() user: CurrentUserPayload) {
+    return this.hrv.findAll(user.id)
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.hrv.findOne(id)
+  findOne(@CurrentUser() user: CurrentUserPayload, @Param('id', ParseIntPipe) id: number) {
+    return this.hrv.findOne(user.id, id)
   }
 
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() dto: Partial<CreateHrvDto>) {
-    return this.hrv.update(id, dto)
+  update(
+    @CurrentUser() user: CurrentUserPayload,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: Partial<CreateHrvDto>,
+  ) {
+    return this.hrv.update(user.id, id, dto)
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.hrv.remove(id)
+  remove(@CurrentUser() user: CurrentUserPayload, @Param('id', ParseIntPipe) id: number) {
+    return this.hrv.remove(user.id, id)
   }
 }

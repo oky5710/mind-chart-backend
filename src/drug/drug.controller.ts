@@ -1,7 +1,9 @@
 import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common'
 import { DrugService } from './drug.service'
 import { SaveDrugDto } from './dto/save-drug.dto'
+import { Public } from '../auth/public.decorator'
 
+@Public()
 @Controller('drugs')
 export class DrugController {
   constructor(private readonly drug: DrugService) {}

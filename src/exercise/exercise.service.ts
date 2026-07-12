@@ -6,11 +6,12 @@ import { CreateExerciseDto } from './dto/create-exercise.dto'
 export class ExerciseService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(dto: CreateExerciseDto) {
+  create(userId: string, dto: CreateExerciseDto) {
     const { startedAt, endedAt, ...rest } = dto
     return this.prisma.exercise.create({
       data: {
         ...rest,
+        userId,
         date: new Date(dto.date),
         ...(startedAt !== undefined && { startedAt: new Date(startedAt) }),
         ...(endedAt !== undefined && { endedAt: new Date(endedAt) }),
@@ -18,14 +19,14 @@ export class ExerciseService {
     })
   }
 
-  findAll(date?: string) {
+  findAll(userId: string, date?: string) {
     return this.prisma.exercise.findMany({
-      where: { ...(date && { date: new Date(date) }) },
+      where: { userId, ...(date && { date: new Date(date) }) },
       orderBy: { date: 'desc' },
     })
   }
 
-  remove(id: string) {
-    return this.prisma.exercise.delete({ where: { id } })
+  remove(userId: string, id: string) {
+    return this.prisma.exercise.deleteMany({ where: { id, userId } })
   }
 }

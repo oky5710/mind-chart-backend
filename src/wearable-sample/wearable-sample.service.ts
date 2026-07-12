@@ -6,9 +6,10 @@ import { CreateWearableSampleDto } from './dto/create-wearable-sample.dto'
 export class WearableSampleService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createBulk(samples: CreateWearableSampleDto[]) {
+  async createBulk(userId: string, samples: CreateWearableSampleDto[]) {
     const result = await this.prisma.wearableSample.createMany({
       data: samples.map((s) => ({
+        userId,
         type: s.type,
         timestamp: new Date(s.timestamp),
         value: s.value,
@@ -18,9 +19,10 @@ export class WearableSampleService {
     return { created: result.count }
   }
 
-  findAll(type: string, from?: string, to?: string) {
+  findAll(userId: string, type: string, from?: string, to?: string) {
     return this.prisma.wearableSample.findMany({
       where: {
+        userId,
         type,
         ...((from || to) && {
           timestamp: {

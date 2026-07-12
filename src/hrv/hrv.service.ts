@@ -6,33 +6,27 @@ import { CreateHrvDto } from './dto/create-hrv.dto'
 export class HrvService {
   constructor(private readonly prisma: PrismaService) {}
 
-  private async getDefaultUserId(): Promise<string> {
-    const user = await this.prisma.user.findUnique({ where: { email: 'test@test.com' } })
-    if (!user) throw new NotFoundException('기본 사용자가 없습니다. seed를 실행해주세요.')
-    return user.id
-  }
-
-  async create(dto: CreateHrvDto) {
-    const userId = await this.getDefaultUserId()
+  async create(userId: string, dto: CreateHrvDto) {
     return this.prisma.hrvAnalysis.create({
       data: { ...dto, userId, examinedAt: new Date(dto.examinedAt) },
     })
   }
 
-  findAll() {
+  findAll(userId: string) {
     return this.prisma.hrvAnalysis.findMany({
+      where: { userId },
       orderBy: { examinedAt: 'desc' },
     })
   }
 
-  async findOne(id: number) {
-    const record = await this.prisma.hrvAnalysis.findUnique({ where: { id } })
+  async findOne(userId: string, id: number) {
+    const record = await this.prisma.hrvAnalysis.findFirst({ where: { id, userId } })
     if (!record) throw new NotFoundException()
     return record
   }
 
-  async update(id: number, dto: Partial<CreateHrvDto>) {
-    await this.findOne(id)
+  async update(userId: string, id: number, dto: Partial<CreateHrvDto>) {
+    await this.findOne(userId, id)
     const { examinedAt, ...rest } = dto
     return this.prisma.hrvAnalysis.update({
       where: { id },
@@ -40,8 +34,8 @@ export class HrvService {
     })
   }
 
-  async remove(id: number) {
-    await this.findOne(id)
+  async remove(userId: string, id: number) {
+    await this.findOne(userId, id)
     return this.prisma.hrvAnalysis.delete({ where: { id } })
   }
 }

@@ -2,21 +2,28 @@ import { Controller, Get, Post, Body, Query, BadRequestException } from '@nestjs
 import { WearableSampleService } from './wearable-sample.service'
 import { BulkWearableSampleDto } from './dto/bulk-wearable-sample.dto'
 import { WEARABLE_SAMPLE_TYPES } from './dto/create-wearable-sample.dto'
+import { CurrentUser } from '../auth/current-user.decorator'
+import type { CurrentUserPayload } from '../auth/current-user.decorator'
 
 @Controller('wearable-samples')
 export class WearableSampleController {
   constructor(private readonly wearableSample: WearableSampleService) {}
 
   @Post('bulk')
-  createBulk(@Body() body: BulkWearableSampleDto) {
-    return this.wearableSample.createBulk(body.data)
+  createBulk(@CurrentUser() user: CurrentUserPayload, @Body() body: BulkWearableSampleDto) {
+    return this.wearableSample.createBulk(user.id, body.data)
   }
 
   @Get()
-  findAll(@Query('type') type: string, @Query('from') from?: string, @Query('to') to?: string) {
+  findAll(
+    @CurrentUser() user: CurrentUserPayload,
+    @Query('type') type: string,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+  ) {
     if (!type || !WEARABLE_SAMPLE_TYPES.includes(type as (typeof WEARABLE_SAMPLE_TYPES)[number])) {
       throw new BadRequestException(`type은 ${WEARABLE_SAMPLE_TYPES.join(', ')} 중 하나여야 합니다`)
     }
-    return this.wearableSample.findAll(type, from, to)
+    return this.wearableSample.findAll(user.id, type, from, to)
   }
 }

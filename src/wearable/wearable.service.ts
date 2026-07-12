@@ -28,7 +28,7 @@ export class WearableService {
     throw new Error(`날짜 형식을 인식할 수 없습니다: ${date}`)
   }
 
-  async upsert(dto: UpsertWearableDto) {
+  async upsert(userId: string, dto: UpsertWearableDto) {
     const { date, sleepStart, sleepEnd, ...data } = dto
     const dateObj = this.parseDate(date)
     const payload = {
@@ -37,7 +37,7 @@ export class WearableService {
       ...(sleepEnd !== undefined && { sleepEnd: this.parseDate(sleepEnd) }),
     }
     const existing = await this.prisma.wearableData.findFirst({
-      where: { userId: null, date: dateObj },
+      where: { userId, date: dateObj },
     })
     if (existing) {
       return this.prisma.wearableData.update({
@@ -46,17 +46,17 @@ export class WearableService {
       })
     }
     return this.prisma.wearableData.create({
-      data: { date: dateObj, ...payload },
+      data: { userId, date: dateObj, ...payload },
     })
   }
 
-  upsertBulk(dtos: UpsertWearableDto[]) {
-    return Promise.all(dtos.map((dto) => this.upsert(dto)))
+  upsertBulk(userId: string, dtos: UpsertWearableDto[]) {
+    return Promise.all(dtos.map((dto) => this.upsert(userId, dto)))
   }
 
-  findAll(date?: string) {
+  findAll(userId: string, date?: string) {
     return this.prisma.wearableData.findMany({
-      where: { ...(date && { date: new Date(date) }) },
+      where: { userId, ...(date && { date: new Date(date) }) },
       orderBy: { date: 'desc' },
     })
   }

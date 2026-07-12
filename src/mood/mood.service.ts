@@ -6,20 +6,20 @@ import { CreateMoodLogDto } from './dto/create-mood-log.dto'
 export class MoodService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(dto: CreateMoodLogDto) {
+  create(userId: string, dto: CreateMoodLogDto) {
     return this.prisma.moodLog.create({
-      data: { ...dto, date: new Date(dto.date) },
+      data: { ...dto, userId, date: new Date(dto.date) },
     })
   }
 
-  findAll(date?: string) {
+  findAll(userId: string, date?: string) {
     return this.prisma.moodLog.findMany({
-      where: { ...(date && { date: new Date(date) }) },
+      where: { userId, ...(date && { date: new Date(date) }) },
       orderBy: { date: 'desc' },
     })
   }
 
-  remove(id: string) {
-    return this.prisma.moodLog.delete({ where: { id } })
+  remove(userId: string, id: string) {
+    return this.prisma.moodLog.deleteMany({ where: { id, userId } })
   }
 }

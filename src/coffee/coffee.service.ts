@@ -6,13 +6,13 @@ import { CreateCoffeeLogDto } from './dto/create-coffee-log.dto'
 export class CoffeeService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(dto: CreateCoffeeLogDto) {
+  create(userId: string, dto: CreateCoffeeLogDto) {
     return this.prisma.coffeeLog.create({
-      data: { ...dto, date: new Date(dto.date) },
+      data: { ...dto, userId, date: new Date(dto.date) },
     })
   }
 
-  findAll(date?: string) {
+  findAll(userId: string, date?: string) {
     let dateFilter = {}
     if (date) {
       const start = new Date(date)
@@ -21,12 +21,12 @@ export class CoffeeService {
       dateFilter = { date: { gte: start, lt: end } }
     }
     return this.prisma.coffeeLog.findMany({
-      where: dateFilter,
+      where: { userId, ...dateFilter },
       orderBy: { date: 'desc' },
     })
   }
 
-  remove(id: string) {
-    return this.prisma.coffeeLog.delete({ where: { id } })
+  remove(userId: string, id: string) {
+    return this.prisma.coffeeLog.deleteMany({ where: { id, userId } })
   }
 }

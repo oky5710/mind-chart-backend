@@ -6,27 +6,27 @@ import { CreateEventDto } from './dto/create-event.dto'
 export class EventService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(dto: CreateEventDto) {
+  create(userId: string, dto: CreateEventDto) {
     return this.prisma.event.create({
-      data: { ...dto, date: new Date(dto.date) },
+      data: { ...dto, userId, date: new Date(dto.date) },
     })
   }
 
-  findAll(date?: string) {
+  findAll(userId: string, date?: string) {
     return this.prisma.event.findMany({
-      where: { ...(date && { date: new Date(date) }) },
+      where: { userId, ...(date && { date: new Date(date) }) },
       orderBy: { date: 'desc' },
     })
   }
 
-  async findOne(id: string) {
-    const record = await this.prisma.event.findUnique({ where: { id } })
+  async findOne(userId: string, id: string) {
+    const record = await this.prisma.event.findFirst({ where: { id, userId } })
     if (!record) throw new NotFoundException()
     return record
   }
 
-  async update(id: string, dto: Partial<CreateEventDto>) {
-    await this.findOne(id)
+  async update(userId: string, id: string, dto: Partial<CreateEventDto>) {
+    await this.findOne(userId, id)
     const { date, ...rest } = dto
     return this.prisma.event.update({
       where: { id },
@@ -34,8 +34,8 @@ export class EventService {
     })
   }
 
-  async remove(id: string) {
-    await this.findOne(id)
+  async remove(userId: string, id: string) {
+    await this.findOne(userId, id)
     return this.prisma.event.delete({ where: { id } })
   }
 }
