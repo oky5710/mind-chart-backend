@@ -1,12 +1,9 @@
 import { IsDateString, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator'
 
 export enum EventType {
-  FRIEND_MEETING = 'FRIEND_MEETING',
-  CONCERT = 'CONCERT',
-  RELATIONSHIP_STRESS = 'RELATIONSHIP_STRESS',
-  CONFLICT = 'CONFLICT',
-  EXERCISE = 'EXERCISE',
-  HOBBY = 'HOBBY',
+  MEDICATION_CHANGE = 'MEDICATION_CHANGE',
+  RELATIONSHIP_ISSUE = 'RELATIONSHIP_ISSUE',
+  WORK_STRESS = 'WORK_STRESS',
   OTHER = 'OTHER',
 }
 
@@ -30,11 +27,13 @@ export class CreateEventDto {
   @IsString()
   description?: string
 
+  @IsOptional()
   @IsEnum(Sentiment)
-  sentiment: Sentiment
+  sentiment?: Sentiment
 
+  @IsOptional()
   @IsInt()
   @Min(1)
   @Max(5)
-  intensity: number
+  intensity?: number
 }
