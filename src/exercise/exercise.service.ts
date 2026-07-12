@@ -2,15 +2,29 @@ import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { CreateExerciseDto } from './dto/create-exercise.dto'
 
+// 단축어 자동화는 강도(주관적 값)를 알 수 없어, 분당 소모 칼로리로 대략 추정함
+// (걷기 ~3-4kcal/분, 중강도 유산소 ~7-8, 달리기 ~10-12, 고강도 인터벌 12+ 기준의 근사치)
+function estimateIntensity(caloriesBurned: number, durationMinutes: number): number {
+  const kcalPerMin = caloriesBurned / durationMinutes
+  if (kcalPerMin < 4) return 1
+  if (kcalPerMin < 6) return 2
+  if (kcalPerMin < 9) return 3
+  if (kcalPerMin < 12) return 4
+  return 5
+}
+
 @Injectable()
 export class ExerciseService {
   constructor(private readonly prisma: PrismaService) {}
 
   create(userId: string, dto: CreateExerciseDto) {
-    const { startedAt, endedAt, ...rest } = dto
+    const { startedAt, endedAt, caloriesBurned, ...rest } = dto
+    const intensity =
+      rest.intensity ?? (caloriesBurned !== undefined ? estimateIntensity(caloriesBurned, dto.durationMinutes) : undefined)
     return this.prisma.exercise.create({
       data: {
         ...rest,
+        intensity,
         userId,
         date: new Date(dto.date),
         ...(startedAt !== undefined && { startedAt: new Date(startedAt) }),
