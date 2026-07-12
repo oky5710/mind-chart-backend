@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, Query } from '@nestjs/common'
 import { WearableService } from './wearable.service'
 import { UpsertWearableDto } from './dto/upsert-wearable.dto'
+import { BulkWearableDto } from './dto/bulk-wearable.dto'
 import { CurrentUser } from '../auth/current-user.decorator'
 import type { CurrentUserPayload } from '../auth/current-user.decorator'
 
@@ -14,7 +15,7 @@ export class WearableController {
   }
 
   @Post('bulk')
-  upsertBulk(@CurrentUser() user: CurrentUserPayload, @Body() body: { data: UpsertWearableDto[] }) {
+  upsertBulk(@CurrentUser() user: CurrentUserPayload, @Body() body: BulkWearableDto) {
     return this.wearable.upsertBulk(user.id, body.data)
   }
 
