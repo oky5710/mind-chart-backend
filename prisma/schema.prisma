@@ -37,7 +37,7 @@ model Event {
   id          String     @id @default(cuid())
   userId      String?
   user        User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  date        DateTime   @db.Date
+  date        DateTime
   type        EventType
   title       String
   description String?
