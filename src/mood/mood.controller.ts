@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Body, Param, Query } from '@nestjs/common'
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query } from '@nestjs/common'
 import { MoodService } from './mood.service'
 import { CreateMoodLogDto } from './dto/create-mood-log.dto'
 import { CurrentUser } from '../auth/current-user.decorator'
@@ -16,6 +16,15 @@ export class MoodController {
   @Get()
   findAll(@CurrentUser() user: CurrentUserPayload, @Query('date') date?: string) {
     return this.mood.findAll(user.id, date)
+  }
+
+  @Patch(':id')
+  update(
+    @CurrentUser() user: CurrentUserPayload,
+    @Param('id') id: string,
+    @Body() dto: Partial<CreateMoodLogDto>,
+  ) {
+    return this.mood.update(user.id, id, dto)
   }
 
   @Delete(':id')

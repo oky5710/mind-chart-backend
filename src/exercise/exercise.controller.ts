@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Body, Param, Query } from '@nestjs/common'
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query } from '@nestjs/common'
 import { ExerciseService } from './exercise.service'
 import { CreateExerciseDto } from './dto/create-exercise.dto'
 import { CurrentUser } from '../auth/current-user.decorator'
@@ -16,6 +16,15 @@ export class ExerciseController {
   @Get()
   findAll(@CurrentUser() user: CurrentUserPayload, @Query('date') date?: string) {
     return this.exercise.findAll(user.id, date)
+  }
+
+  @Patch(':id')
+  update(
+    @CurrentUser() user: CurrentUserPayload,
+    @Param('id') id: string,
+    @Body() dto: Partial<CreateExerciseDto>,
+  ) {
+    return this.exercise.update(user.id, id, dto)
   }
 
   @Delete(':id')

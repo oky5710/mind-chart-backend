@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { CreateCoffeeLogDto } from './dto/create-coffee-log.dto'
 
@@ -23,6 +23,20 @@ export class CoffeeService {
     return this.prisma.coffeeLog.findMany({
       where: { userId, ...dateFilter },
       orderBy: { date: 'desc' },
+    })
+  }
+
+  async findOne(userId: string, id: string) {
+    const record = await this.prisma.coffeeLog.findFirst({ where: { id, userId } })
+    if (!record) throw new NotFoundException()
+    return record
+  }
+
+  async update(userId: string, id: string, dto: Partial<CreateCoffeeLogDto>) {
+    await this.findOne(userId, id)
+    return this.prisma.coffeeLog.update({
+      where: { id },
+      data: { ...dto, ...(dto.date && { date: new Date(dto.date) }) },
     })
   }
 
