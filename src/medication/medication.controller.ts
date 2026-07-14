@@ -29,7 +29,7 @@ export class MedicationController {
   // 메인 화면 아침/취침 퀵버튼
   @Post('logs/quick')
   logTiming(@CurrentUser() user: CurrentUserPayload, @Body() dto: QuickLogDto) {
-    return this.medication.logTiming(user.id, dto.timing)
+    return this.medication.logTiming(user.id, dto.timing, dto.date)
   }
 
   @Get('logs')

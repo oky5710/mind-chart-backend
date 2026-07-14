@@ -5,11 +5,6 @@ import { CreateMedicationLogDto } from './dto/create-medication-log.dto'
 import { CreateMedicationChangeDto } from './dto/create-medication-change.dto'
 import type { DoseTiming } from './dto/quick-log.dto'
 
-function startOfToday(): Date {
-  const now = new Date()
-  return new Date(now.getFullYear(), now.getMonth(), now.getDate())
-}
-
 @Injectable()
 export class MedicationService {
   constructor(private readonly prisma: PrismaService) {}
@@ -50,17 +45,19 @@ export class MedicationService {
   }
 
   // 메인 화면 아침/취침 퀵버튼 — 해당 시간대에 복용하는 약 전부를 한 번에 복용 처리
-  async logTiming(userId: string, timing: DoseTiming) {
+  // date는 프론트가 보낸 사용자 로컬 날짜(YYYY-MM-DD)를 그대로 씀 (서버 UTC 자정 기준으로
+  // 계산하면 자정 근처에 사용자 로컬 날짜와 하루 어긋날 수 있음)
+  async logTiming(userId: string, timing: DoseTiming, date: string) {
     const medications = await this.prisma.medication.findMany({
       where: { deletedAt: null, timings: { has: timing } },
     })
-    const today = startOfToday()
+    const dateObj = new Date(date)
     const now = new Date()
     return Promise.all(
       medications.map((med) =>
         this.prisma.medicationLog.upsert({
-          where: { userId_medicationId_date_timing: { userId, medicationId: med.id, date: today, timing } },
-          create: { userId, medicationId: med.id, date: today, timing, takenAt: now, taken: true },
+          where: { userId_medicationId_date_timing: { userId, medicationId: med.id, date: dateObj, timing } },
+          create: { userId, medicationId: med.id, date: dateObj, timing, takenAt: now, taken: true },
           update: { takenAt: now, taken: true },
           include: { medication: true },
         }),
