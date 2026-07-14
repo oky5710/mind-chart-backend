@@ -125,11 +125,15 @@ model MedicationLog {
   medicationId String
   medication   Medication @relation(fields: [medicationId], references: [id])
   date         DateTime   @db.Date
-  dosage       Float
+  // 아침/취침 등 어느 시간대 복용인지 (메인 화면 퀵버튼에서 기록)
+  timing       String?
+  // 실제로 복용 버튼을 누른 시각
+  takenAt      DateTime?
+  dosage       Float?
   taken        Boolean    @default(false)
   createdAt    DateTime   @default(now())
 
-  @@unique([userId, medicationId, date])
+  @@unique([userId, medicationId, date, timing])
 }
 
 // ──────────────────────────────────────────

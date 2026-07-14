@@ -3,6 +3,7 @@ import { MedicationService } from './medication.service'
 import { CreateMedicationDto } from './dto/create-medication.dto'
 import { CreateMedicationLogDto } from './dto/create-medication-log.dto'
 import { CreateMedicationChangeDto } from './dto/create-medication-change.dto'
+import { QuickLogDto } from './dto/quick-log.dto'
 import { CurrentUser } from '../auth/current-user.decorator'
 import type { CurrentUserPayload } from '../auth/current-user.decorator'
 
@@ -23,6 +24,12 @@ export class MedicationController {
   @Post('logs')
   createLog(@CurrentUser() user: CurrentUserPayload, @Body() dto: CreateMedicationLogDto) {
     return this.medication.createLog(user.id, dto)
+  }
+
+  // 메인 화면 아침/취침 퀵버튼
+  @Post('logs/quick')
+  logTiming(@CurrentUser() user: CurrentUserPayload, @Body() dto: QuickLogDto) {
+    return this.medication.logTiming(user.id, dto.timing)
   }
 
   @Get('logs')
