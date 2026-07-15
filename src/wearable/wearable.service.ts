@@ -29,12 +29,21 @@ export class WearableService {
   }
 
   async upsert(userId: string, dto: UpsertWearableDto) {
-    const { date, sleepStart, sleepEnd, ...data } = dto
+    const { date, sleepStart, sleepEnd, sleepDuration, ...data } = dto
     const dateObj = this.parseDate(date)
+    const sleepStartDate = sleepStart !== undefined ? this.parseDate(sleepStart) : undefined
+    const sleepEndDate = sleepEnd !== undefined ? this.parseDate(sleepEnd) : undefined
+    // 시작/종료 시각이 둘 다 있으면 수면 시간(시간 단위)은 항상 여기서 계산함
+    // (단축어에서 따로 계산해서 보낼 필요 없음)
+    const computedSleepDuration =
+      sleepStartDate && sleepEndDate
+        ? (sleepEndDate.getTime() - sleepStartDate.getTime()) / (1000 * 60 * 60)
+        : sleepDuration
     const payload = {
       ...data,
-      ...(sleepStart !== undefined && { sleepStart: this.parseDate(sleepStart) }),
-      ...(sleepEnd !== undefined && { sleepEnd: this.parseDate(sleepEnd) }),
+      ...(sleepStartDate && { sleepStart: sleepStartDate }),
+      ...(sleepEndDate && { sleepEnd: sleepEndDate }),
+      ...(computedSleepDuration !== undefined && { sleepDuration: computedSleepDuration }),
     }
     const existing = await this.prisma.wearableData.findFirst({
       where: { userId, date: dateObj },
