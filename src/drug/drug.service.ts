@@ -101,19 +101,24 @@ export class DrugService {
     }
   }
 
-  save(dto: SaveDrugDto) {
-    return this.prisma.medication.upsert({
-      where: { itemSeq: dto.itemSeq ?? undefined },
-      update: {
-        name:       dto.name,
-        entpName:   dto.entpName,
-        itemImage:  dto.itemImage,
-        drugShape:  dto.drugShape,
-        colorClass: dto.colorClass,
-        chart:      dto.chart,
-      },
-      create: dto,
-    })
+  async save(dto: SaveDrugDto) {
+    if (dto.itemSeq) {
+      const existing = await this.prisma.medication.findUnique({ where: { itemSeq: dto.itemSeq } })
+      if (existing) {
+        return this.prisma.medication.update({
+          where: { itemSeq: dto.itemSeq },
+          data: {
+            name:       dto.name,
+            entpName:   dto.entpName,
+            itemImage:  dto.itemImage,
+            drugShape:  dto.drugShape,
+            colorClass: dto.colorClass,
+            chart:      dto.chart,
+          },
+        })
+      }
+    }
+    return this.prisma.medication.create({ data: dto })
   }
 
   findAll() {

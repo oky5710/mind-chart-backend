@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { CreateCoffeeLogDto } from './dto/create-coffee-log.dto'
+import { findOwnedOrThrow } from '../common/find-owned.util'
 
 @Injectable()
 export class CoffeeService {
@@ -28,8 +29,7 @@ export class CoffeeService {
 
   async findOne(userId: string, id: string) {
     const record = await this.prisma.coffeeLog.findFirst({ where: { id, userId } })
-    if (!record) throw new NotFoundException()
-    return record
+    return findOwnedOrThrow(record)
   }
 
   async update(userId: string, id: string, dto: Partial<CreateCoffeeLogDto>) {
@@ -40,7 +40,8 @@ export class CoffeeService {
     })
   }
 
-  remove(userId: string, id: string) {
-    return this.prisma.coffeeLog.deleteMany({ where: { id, userId } })
+  async remove(userId: string, id: string) {
+    await this.findOne(userId, id)
+    return this.prisma.coffeeLog.delete({ where: { id } })
   }
 }

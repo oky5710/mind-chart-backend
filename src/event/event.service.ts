@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { CreateEventDto } from './dto/create-event.dto'
+import { findOwnedOrThrow } from '../common/find-owned.util'
 
 @Injectable()
 export class EventService {
@@ -13,16 +14,22 @@ export class EventService {
   }
 
   findAll(userId: string, date?: string) {
+    let dateFilter = {}
+    if (date) {
+      const start = new Date(date)
+      const end = new Date(date)
+      end.setDate(end.getDate() + 1)
+      dateFilter = { date: { gte: start, lt: end } }
+    }
     return this.prisma.event.findMany({
-      where: { userId, ...(date && { date: new Date(date) }) },
+      where: { userId, ...dateFilter },
       orderBy: { date: 'desc' },
     })
   }
 
   async findOne(userId: string, id: string) {
     const record = await this.prisma.event.findFirst({ where: { id, userId } })
-    if (!record) throw new NotFoundException()
-    return record
+    return findOwnedOrThrow(record)
   }
 
   async update(userId: string, id: string, dto: Partial<CreateEventDto>) {

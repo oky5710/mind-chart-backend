@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { CreateExerciseDto } from './dto/create-exercise.dto'
+import { findOwnedOrThrow } from '../common/find-owned.util'
 
 // 단축어 자동화는 강도(주관적 값)를 알 수 없어, 분당 소모 칼로리로 대략 추정함
 // (걷기 ~3-4kcal/분, 중강도 유산소 ~7-8, 달리기 ~10-12, 고강도 인터벌 12+ 기준의 근사치)
@@ -42,8 +43,7 @@ export class ExerciseService {
 
   async findOne(userId: string, id: string) {
     const record = await this.prisma.exercise.findFirst({ where: { id, userId } })
-    if (!record) throw new NotFoundException()
-    return record
+    return findOwnedOrThrow(record)
   }
 
   async update(userId: string, id: string, dto: Partial<CreateExerciseDto>) {
@@ -60,7 +60,8 @@ export class ExerciseService {
     })
   }
 
-  remove(userId: string, id: string) {
-    return this.prisma.exercise.deleteMany({ where: { id, userId } })
+  async remove(userId: string, id: string) {
+    await this.findOne(userId, id)
+    return this.prisma.exercise.delete({ where: { id } })
   }
 }

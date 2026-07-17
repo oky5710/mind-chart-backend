@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { CreateHrvDto } from './dto/create-hrv.dto'
+import { findOwnedOrThrow } from '../common/find-owned.util'
 
 @Injectable()
 export class HrvService {
@@ -21,8 +22,7 @@ export class HrvService {
 
   async findOne(userId: string, id: number) {
     const record = await this.prisma.hrvAnalysis.findFirst({ where: { id, userId } })
-    if (!record) throw new NotFoundException()
-    return record
+    return findOwnedOrThrow(record)
   }
 
   async update(userId: string, id: number, dto: Partial<CreateHrvDto>) {

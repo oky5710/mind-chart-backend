@@ -3,11 +3,11 @@ import { DrugService } from './drug.service'
 import { SaveDrugDto } from './dto/save-drug.dto'
 import { Public } from '../auth/public.decorator'
 
-@Public()
 @Controller('drugs')
 export class DrugController {
   constructor(private readonly drug: DrugService) {}
 
+  @Public()
   @Get('search')
   search(
     @Query('name') name: string,
@@ -22,11 +22,13 @@ export class DrugController {
     return this.drug.save(dto)
   }
 
+  @Public()
   @Get()
   findAll() {
     return this.drug.findAll()
   }
 
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.drug.findOne(id)

@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { CreateMoodLogDto } from './dto/create-mood-log.dto'
+import { findOwnedOrThrow } from '../common/find-owned.util'
 
 @Injectable()
 export class MoodService {
@@ -21,8 +22,7 @@ export class MoodService {
 
   async findOne(userId: string, id: string) {
     const record = await this.prisma.moodLog.findFirst({ where: { id, userId } })
-    if (!record) throw new NotFoundException()
-    return record
+    return findOwnedOrThrow(record)
   }
 
   async update(userId: string, id: string, dto: Partial<CreateMoodLogDto>) {
@@ -33,7 +33,8 @@ export class MoodService {
     })
   }
 
-  remove(userId: string, id: string) {
-    return this.prisma.moodLog.deleteMany({ where: { id, userId } })
+  async remove(userId: string, id: string) {
+    await this.findOne(userId, id)
+    return this.prisma.moodLog.delete({ where: { id } })
   }
 }
