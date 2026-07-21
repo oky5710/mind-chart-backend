@@ -37,6 +37,11 @@ export class MedicationController {
     return this.medication.findLogs(user.id, date)
   }
 
+  @Delete('logs/:id')
+  removeLog(@CurrentUser() user: CurrentUserPayload, @Param('id') id: string) {
+    return this.medication.removeLog(user.id, id)
+  }
+
   @Post('changes')
   createChange(@CurrentUser() user: CurrentUserPayload, @Body() dto: CreateMedicationChangeDto) {
     return this.medication.createChange(user.id, dto)

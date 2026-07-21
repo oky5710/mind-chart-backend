@@ -4,6 +4,7 @@ import { CreateMedicationDto } from './dto/create-medication.dto'
 import { CreateMedicationLogDto } from './dto/create-medication-log.dto'
 import { CreateMedicationChangeDto } from './dto/create-medication-change.dto'
 import type { DoseTiming } from './dto/quick-log.dto'
+import { findOwnedOrThrow } from '../common/find-owned.util'
 
 @Injectable()
 export class MedicationService {
@@ -85,5 +86,11 @@ export class MedicationService {
       where: { id },
       data: { deletedAt: new Date() },
     })
+  }
+
+  async removeLog(userId: string, id: string) {
+    const record = await this.prisma.medicationLog.findFirst({ where: { id, userId } })
+    findOwnedOrThrow(record)
+    return this.prisma.medicationLog.delete({ where: { id } })
   }
 }
