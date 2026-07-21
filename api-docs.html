@@ -1201,23 +1201,23 @@
           <div class="code-block">
             <div class="code-label">Request Body</div>
             <pre>{
-  <span class="k">"date"</span>:            <span class="s">"2026-06-28"</span>,  <span class="req">// required</span>
-  <span class="k">"type"</span>:            <span class="s">"달리기"</span>,       <span class="req">// required</span>
-  <span class="k">"durationMinutes"</span>: <span class="n">30</span>,             <span class="req">// required — 1 이상</span>
-  <span class="k">"intensity"</span>:       <span class="n">3</span>               <span class="req">// required — 1 ~ 5</span>
+  <span class="k">"type"</span>:      <span class="s">"달리기"</span>,                     <span class="req">// required</span>
+  <span class="k">"startedAt"</span>: <span class="s">"2026-06-28T09:00:00.000Z"</span>, <span class="req">// required — ISO 8601</span>
+  <span class="k">"endedAt"</span>:   <span class="s">"2026-06-28T09:30:00.000Z"</span>, <span class="req">// required — ISO 8601, startedAt 이후</span>
+  <span class="k">"intensity"</span>: <span class="n">3</span>                               <span class="req">// required — 1 ~ 5</span>
 }</pre>
           </div>
           <div class="code-block">
             <div class="code-label">Response 201</div>
             <pre>{
-  <span class="k">"id"</span>:              <span class="s">"clx..."</span>,
-  <span class="k">"userId"</span>:          <span class="n">null</span>,
-  <span class="k">"date"</span>:            <span class="s">"2026-06-28T00:00:00.000Z"</span>,
-  <span class="k">"type"</span>:            <span class="s">"달리기"</span>,
-  <span class="k">"durationMinutes"</span>: <span class="n">30</span>,
-  <span class="k">"intensity"</span>:       <span class="n">3</span>,
-  <span class="k">"createdAt"</span>:       <span class="s">"2026-06-28T11:00:00.000Z"</span>,
-  <span class="k">"updatedAt"</span>:       <span class="s">"2026-06-28T11:00:00.000Z"</span>
+  <span class="k">"id"</span>:        <span class="s">"clx..."</span>,
+  <span class="k">"userId"</span>:    <span class="n">null</span>,
+  <span class="k">"type"</span>:      <span class="s">"달리기"</span>,
+  <span class="k">"startedAt"</span>: <span class="s">"2026-06-28T09:00:00.000Z"</span>,
+  <span class="k">"endedAt"</span>:   <span class="s">"2026-06-28T09:30:00.000Z"</span>,
+  <span class="k">"intensity"</span>: <span class="n">3</span>,
+  <span class="k">"createdAt"</span>: <span class="s">"2026-06-28T11:00:00.000Z"</span>,
+  <span class="k">"updatedAt"</span>: <span class="s">"2026-06-28T11:00:00.000Z"</span>
 }</pre>
           </div>
         </div>
@@ -1242,14 +1242,14 @@
               <td class="pname">date</td>
               <td><span class="badge opt">optional</span></td>
               <td>string</td>
-              <td>특정 날짜 필터 (예: <code style="font-size:11px">2026-06-28</code>)</td>
+              <td>특정 날짜 필터 — startedAt 기준 (예: <code style="font-size:11px">2026-06-28</code>)</td>
             </tr>
           </tbody>
         </table>
         <div class="code-single" style="margin-top:10px">
           <div class="code-block">
             <div class="code-label">Response 200</div>
-            <pre>[{ <span class="k">"id"</span>: <span class="s">"clx..."</span>, <span class="k">"date"</span>: <span class="s">"2026-06-28T00:00:00.000Z"</span>, <span class="k">"type"</span>: <span class="s">"달리기"</span>, <span class="k">"durationMinutes"</span>: <span class="n">30</span>, <span class="k">"intensity"</span>: <span class="n">3</span>, ... }]</pre>
+            <pre>[{ <span class="k">"id"</span>: <span class="s">"clx..."</span>, <span class="k">"type"</span>: <span class="s">"달리기"</span>, <span class="k">"startedAt"</span>: <span class="s">"2026-06-28T09:00:00.000Z"</span>, <span class="k">"endedAt"</span>: <span class="s">"2026-06-28T09:30:00.000Z"</span>, <span class="k">"intensity"</span>: <span class="n">3</span>, ... }]</pre>
           </div>
         </div>
       </div>

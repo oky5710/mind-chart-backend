@@ -1,15 +1,14 @@
-import { IsString, IsInt, IsNumber, IsOptional, Min, Max } from 'class-validator'
+import { IsString, IsInt, IsNumber, IsOptional, IsDateString, Min, Max } from 'class-validator'
 
 export class CreateExerciseDto {
   @IsString()
-  date: string
-
-  @IsString()
   type: string
 
-  @IsInt()
-  @Min(1)
-  durationMinutes: number
+  @IsDateString()
+  startedAt: string
+
+  @IsDateString()
+  endedAt: string
 
   @IsOptional()
   @IsInt()
@@ -21,10 +20,4 @@ export class CreateExerciseDto {
   @IsOptional()
   @IsNumber()
   caloriesBurned?: number
-
-  @IsOptional()
-  startedAt?: any
-
-  @IsOptional()
-  endedAt?: any
 }

@@ -14,30 +14,41 @@ function estimateIntensity(caloriesBurned: number, durationMinutes: number): num
   return 5
 }
 
+function durationMinutesBetween(startedAt: string, endedAt: string): number {
+  return Math.max(1, Math.round((new Date(endedAt).getTime() - new Date(startedAt).getTime()) / 60000))
+}
+
 @Injectable()
 export class ExerciseService {
   constructor(private readonly prisma: PrismaService) {}
 
   create(userId: string, dto: CreateExerciseDto) {
-    const { startedAt, endedAt, caloriesBurned, ...rest } = dto
-    const intensity =
-      rest.intensity ?? (caloriesBurned !== undefined ? estimateIntensity(caloriesBurned, dto.durationMinutes) : undefined)
+    const { caloriesBurned, ...rest } = dto
+    const durationMinutes = durationMinutesBetween(dto.startedAt, dto.endedAt)
+    const intensity = rest.intensity ?? (caloriesBurned !== undefined ? estimateIntensity(caloriesBurned, durationMinutes) : undefined)
     return this.prisma.exercise.create({
       data: {
-        ...rest,
+        type: rest.type,
         intensity,
         userId,
-        date: new Date(dto.date),
-        ...(startedAt !== undefined && { startedAt: new Date(startedAt) }),
-        ...(endedAt !== undefined && { endedAt: new Date(endedAt) }),
+        startedAt: new Date(dto.startedAt),
+        endedAt: new Date(dto.endedAt),
       },
     })
   }
 
   findAll(userId: string, date?: string) {
     return this.prisma.exercise.findMany({
-      where: { userId, ...(date && { date: new Date(date) }) },
-      orderBy: { date: 'desc' },
+      where: {
+        userId,
+        ...(date && {
+          startedAt: {
+            gte: new Date(`${date}T00:00:00`),
+            lt: new Date(new Date(`${date}T00:00:00`).getTime() + 24 * 60 * 60 * 1000),
+          },
+        }),
+      },
+      orderBy: { startedAt: 'desc' },
     })
   }
 
@@ -48,14 +59,13 @@ export class ExerciseService {
 
   async update(userId: string, id: string, dto: Partial<CreateExerciseDto>) {
     await this.findOne(userId, id)
-    const { startedAt, endedAt, caloriesBurned, ...rest } = dto
+    const { caloriesBurned, ...rest } = dto
     return this.prisma.exercise.update({
       where: { id },
       data: {
         ...rest,
-        ...(dto.date && { date: new Date(dto.date) }),
-        ...(startedAt !== undefined && { startedAt: new Date(startedAt) }),
-        ...(endedAt !== undefined && { endedAt: new Date(endedAt) }),
+        ...(dto.startedAt && { startedAt: new Date(dto.startedAt) }),
+        ...(dto.endedAt && { endedAt: new Date(dto.endedAt) }),
       },
     })
   }
