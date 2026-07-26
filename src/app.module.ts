@@ -4,6 +4,7 @@ import { AuthModule } from './auth/auth.module'
 import { HrvModule } from './hrv/hrv.module'
 import { EventModule } from './event/event.module'
 import { MedicationModule } from './medication/medication.module'
+import { MedicationReminderModule } from './medication-reminder/medication-reminder.module'
 import { DrugModule } from './drug/drug.module'
 import { ExerciseModule } from './exercise/exercise.module'
 import { CoffeeModule } from './coffee/coffee.module'
@@ -12,6 +13,19 @@ import { WearableModule } from './wearable/wearable.module'
 import { WearableSampleModule } from './wearable-sample/wearable-sample.module'
 
 @Module({
-  imports: [PrismaModule, AuthModule, HrvModule, EventModule, MedicationModule, DrugModule, ExerciseModule, CoffeeModule, MoodModule, WearableModule, WearableSampleModule],
+  imports: [
+    PrismaModule,
+    AuthModule,
+    HrvModule,
+    EventModule,
+    MedicationModule,
+    MedicationReminderModule,
+    DrugModule,
+    ExerciseModule,
+    CoffeeModule,
+    MoodModule,
+    WearableModule,
+    WearableSampleModule,
+  ],
 })
 export class AppModule {}

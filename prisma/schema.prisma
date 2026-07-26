@@ -19,15 +19,16 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  events            Event[]
-  hrvAnalyses       HrvAnalysis[]
-  medicationLogs    MedicationLog[]
-  medicationChanges MedicationChange[]
-  wearableData      WearableData[]
-  wearableSamples   WearableSample[]
-  exercises         Exercise[]
-  coffeeLogs        CoffeeLog[]
-  moodLogs          MoodLog[]
+  events              Event[]
+  hrvAnalyses         HrvAnalysis[]
+  medicationLogs      MedicationLog[]
+  medicationChanges   MedicationChange[]
+  medicationReminders MedicationReminder[]
+  wearableData        WearableData[]
+  wearableSamples     WearableSample[]
+  exercises           Exercise[]
+  coffeeLogs          CoffeeLog[]
+  moodLogs            MoodLog[]
 }
 
 // ──────────────────────────────────────────
@@ -158,6 +159,32 @@ enum ChangeType {
   STOPPED
   DOSAGE_INCREASED
   DOSAGE_DECREASED
+}
+
+// ──────────────────────────────────────────
+// 약 복용 알림 설정 (로컬 알림 예약은 클라이언트가 하고, 여기엔 설정값만 저장)
+// ──────────────────────────────────────────
+model MedicationReminder {
+  id         String             @id @default(cuid())
+  userId     String
+  user       User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // 아침/취침 등 어느 시간대 알림인지 — MedicationLog.timing과 같은 값(DOSE_TIMINGS)을 쓴다.
+  timing     String
+  repeatType ReminderRepeatType
+  // repeatType이 WEEKLY일 때만 의미 있음 — 0(일)~6(토), 여러 요일 담을 수 있음.
+  weekdays   Int[]
+  // 24시간 표기 "HH:mm" — 타임존 없이 로컬 벽시계 시각으로 취급한다.
+  time       String
+  startDate  DateTime           @db.Date
+  // null이면 무기한("계속")
+  endDate    DateTime?          @db.Date
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+}
+
+enum ReminderRepeatType {
+  DAILY
+  WEEKLY
 }
 
 // ──────────────────────────────────────────
