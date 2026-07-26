@@ -11,6 +11,7 @@ import { CoffeeModule } from './coffee/coffee.module'
 import { MoodModule } from './mood/mood.module'
 import { WearableModule } from './wearable/wearable.module'
 import { WearableSampleModule } from './wearable-sample/wearable-sample.module'
+import { RmssdEventModule } from './rmssd-event/rmssd-event.module'
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { WearableSampleModule } from './wearable-sample/wearable-sample.module'
     MoodModule,
     WearableModule,
     WearableSampleModule,
+    RmssdEventModule,
   ],
 })
 export class AppModule {}

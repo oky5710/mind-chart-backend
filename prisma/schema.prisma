@@ -29,6 +29,7 @@ model User {
   exercises           Exercise[]
   coffeeLogs          CoffeeLog[]
   moodLogs            MoodLog[]
+  rmssdEvents         RmssdEvent[]
 }
 
 // ──────────────────────────────────────────
@@ -267,4 +268,35 @@ model WearableSample {
 
   @@unique([userId, type, timestamp])
   @@index([type, timestamp])
+}
+
+// ──────────────────────────────────────────
+// rMSSD 급격한 변화 이벤트 (기기가 백그라운드에서 30일 중앙값 대비 낮음/높음을 감지해 알림을
+// 보내면, 그때 사용자가 고른 감정 + 선택적 메모)
+// ──────────────────────────────────────────
+model RmssdEvent {
+  id         String         @id @default(cuid())
+  userId     String
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  occurredAt DateTime
+  rmssdValue Float
+  direction  RmssdDirection
+  emotion    RmssdEmotion
+  note       String?
+  createdAt  DateTime       @default(now())
+}
+
+enum RmssdDirection {
+  LOW
+  HIGH
+}
+
+enum RmssdEmotion {
+  ANXIETY
+  STRESS
+  IRRITATION
+  SADNESS
+  FATIGUE
+  CALM
+  JOY
 }
