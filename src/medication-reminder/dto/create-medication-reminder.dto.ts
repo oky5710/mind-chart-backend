@@ -1,10 +1,14 @@
-import { ArrayNotEmpty, IsArray, IsDateString, IsIn, IsInt, IsOptional, Matches, Max, Min, ValidateIf } from 'class-validator'
+import { ArrayNotEmpty, IsArray, IsBoolean, IsDateString, IsIn, IsInt, IsOptional, Matches, Max, Min, ValidateIf } from 'class-validator'
 import { DOSE_TIMINGS, type DoseTiming } from '../../medication/dto/quick-log.dto'
 
 export const REMINDER_REPEAT_TYPES = ['DAILY', 'WEEKLY'] as const
 export type ReminderRepeatType = (typeof REMINDER_REPEAT_TYPES)[number]
 
 export class CreateMedicationReminderDto {
+  @IsOptional()
+  @IsBoolean()
+  isEnabled?: boolean
+
   @IsIn(DOSE_TIMINGS)
   timing: DoseTiming
 

@@ -168,6 +168,8 @@ model MedicationReminder {
   id         String             @id @default(cuid())
   userId     String
   user       User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // 삭제하지 않고 잠깐 꺼둘 수 있게 — 꺼져 있으면 기기가 이 알림을 예약하지 않는다.
+  isEnabled  Boolean            @default(true)
   // 아침/취침 등 어느 시간대 알림인지 — MedicationLog.timing과 같은 값(DOSE_TIMINGS)을 쓴다.
   timing     String
   repeatType ReminderRepeatType

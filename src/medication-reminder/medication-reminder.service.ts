@@ -11,6 +11,7 @@ export class MedicationReminderService {
     return this.prisma.medicationReminder.create({
       data: {
         userId,
+        isEnabled: dto.isEnabled ?? true,
         timing: dto.timing,
         repeatType: dto.repeatType,
         weekdays: dto.weekdays ?? [],
