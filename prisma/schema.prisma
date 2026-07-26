@@ -171,7 +171,8 @@ model MedicationReminder {
   // 아침/취침 등 어느 시간대 알림인지 — MedicationLog.timing과 같은 값(DOSE_TIMINGS)을 쓴다.
   timing     String
   repeatType ReminderRepeatType
-  // repeatType이 WEEKLY일 때만 의미 있음 — 0(일)~6(토), 여러 요일 담을 수 있음.
+  // repeatType이 WEEKLY일 때만 의미 있음 — Foundation Calendar.Component.weekday와 동일하게
+  // 1(일)~7(토), 여러 요일 담을 수 있음.
   weekdays   Int[]
   // 24시간 표기 "HH:mm" — 타임존 없이 로컬 벽시계 시각으로 취급한다.
   time       String

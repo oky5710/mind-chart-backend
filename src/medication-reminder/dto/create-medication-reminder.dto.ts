@@ -11,13 +11,14 @@ export class CreateMedicationReminderDto {
   @IsIn(REMINDER_REPEAT_TYPES)
   repeatType: ReminderRepeatType
 
-  // WEEKLY일 때만 필수 — 0(일)~6(토), 여러 요일 가능.
+  // WEEKLY일 때만 필수 — Foundation의 Calendar.Component.weekday와 동일하게 1(일)~7(토), 여러 요일
+  // 가능(클라이언트가 이 값을 그대로 DateComponents.weekday에 넣어 쓰므로 변환 없이 맞춘다).
   @ValidateIf((o) => o.repeatType === 'WEEKLY')
   @IsArray()
   @ArrayNotEmpty()
   @IsInt({ each: true })
-  @Min(0, { each: true })
-  @Max(6, { each: true })
+  @Min(1, { each: true })
+  @Max(7, { each: true })
   weekdays?: number[]
 
   @Matches(/^([01]\d|2[0-3]):[0-5]\d$/)
