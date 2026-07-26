@@ -3,7 +3,26 @@ import { IsDateString, IsIn, IsNumber, IsOptional, IsString } from 'class-valida
 export const RMSSD_DIRECTIONS = ['LOW', 'HIGH'] as const
 export type RmssdDirection = (typeof RMSSD_DIRECTIONS)[number]
 
-export const RMSSD_EMOTIONS = ['ANXIETY', 'STRESS', 'IRRITATION', 'SADNESS', 'FATIGUE', 'CALM', 'JOY'] as const
+export const RMSSD_EMOTIONS = [
+  // 긍정
+  'JOY',
+  'CALM',
+  'CONFIDENCE',
+  'EXCITEMENT',
+  'LOVE',
+  'GRATITUDE',
+  'SATISFACTION',
+  'THRILL',
+  // 부정
+  'ANXIETY',
+  'DEPRESSION',
+  'ANGER',
+  'STRESS',
+  'FRUSTRATION',
+  'SADNESS',
+  'FATIGUE',
+  'FEAR',
+] as const
 export type RmssdEmotion = (typeof RMSSD_EMOTIONS)[number]
 
 export class CreateRmssdEventDto {

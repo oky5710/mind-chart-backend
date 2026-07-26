@@ -292,11 +292,22 @@ enum RmssdDirection {
 }
 
 enum RmssdEmotion {
+  // 긍정
+  JOY
+  CALM
+  CONFIDENCE
+  EXCITEMENT
+  LOVE
+  GRATITUDE
+  SATISFACTION
+  THRILL
+  // 부정
   ANXIETY
+  DEPRESSION
+  ANGER
   STRESS
-  IRRITATION
+  FRUSTRATION
   SADNESS
   FATIGUE
-  CALM
-  JOY
+  FEAR
 }
