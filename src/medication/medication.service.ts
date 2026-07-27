@@ -93,4 +93,21 @@ export class MedicationService {
     findOwnedOrThrow(record)
     return this.prisma.medicationLog.delete({ where: { id } })
   }
+
+  // 캘린더 날짜 요약 시트의 수정 아이콘 — 잘못 고른 시간대(아침/점심/저녁/취침전/필요시)를
+  // 바로잡는 용도로 쓴다.
+  async updateLog(userId: string, id: string, dto: Partial<CreateMedicationLogDto>) {
+    const record = await this.prisma.medicationLog.findFirst({ where: { id, userId } })
+    findOwnedOrThrow(record)
+    const { date, takenAt, ...rest } = dto
+    return this.prisma.medicationLog.update({
+      where: { id },
+      data: {
+        ...rest,
+        ...(date && { date: new Date(date) }),
+        ...(takenAt && { takenAt: new Date(takenAt) }),
+      },
+      include: { medication: true },
+    })
+  }
 }

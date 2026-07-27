@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Body, Param, Query } from '@nestjs/common'
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query } from '@nestjs/common'
 import { MedicationService } from './medication.service'
 import { CreateMedicationDto } from './dto/create-medication.dto'
 import { CreateMedicationLogDto } from './dto/create-medication-log.dto'
@@ -35,6 +35,15 @@ export class MedicationController {
   @Get('logs')
   findLogs(@CurrentUser() user: CurrentUserPayload, @Query('date') date?: string) {
     return this.medication.findLogs(user.id, date)
+  }
+
+  @Patch('logs/:id')
+  updateLog(
+    @CurrentUser() user: CurrentUserPayload,
+    @Param('id') id: string,
+    @Body() dto: Partial<CreateMedicationLogDto>,
+  ) {
+    return this.medication.updateLog(user.id, id, dto)
   }
 
   @Delete('logs/:id')
