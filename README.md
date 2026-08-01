@@ -25,6 +25,20 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## 사용자 역할
+
+Google 최초 로그인 시 계정은 자동 생성되고 `role=user`가 적용됩니다. 역할을 변경하는 공개 API는
+없으며, 승인 작업은 Neon SQL Editor 등 DB 관리 도구에서만 수행합니다. `admin`은 부분 유니크 인덱스로
+한 계정만 허용됩니다. 역할을 바꾼 사용자는 새 역할이 포함된 JWT를 받도록 다시 로그인해야 합니다.
+
+```sql
+-- 서비스 소유자 계정 1개만 실행
+UPDATE "User" SET "role" = 'admin' WHERE "email" = 'owner@example.com';
+
+-- 승인한 연구자
+UPDATE "User" SET "role" = 'researcher' WHERE "email" = 'researcher@example.com';
+```
+
 ## Project setup
 
 ```bash

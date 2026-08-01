@@ -415,6 +415,32 @@
         </div>
       </div>
     </div>
+
+    <div class="endpoint-row">
+      <div class="endpoint-meta">
+        <span class="method POST">POST</span>
+        <span class="endpoint-path">/auth/google</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="endpoint-desc">Google 로그인 — 최초 로그인은 role=user 계정을 자동 생성하고 JWT 액세스 토큰 발급</div>
+        <div class="endpoint-note">admin·researcher 역할은 로그인 요청으로 변경할 수 없으며 DB에서 승인된 계정만 변경한다.</div>
+        <div class="code-pair">
+          <div class="code-block">
+            <div class="code-label">Request Body</div>
+            <pre>{
+  <span class="k">"idToken"</span>: <span class="s">"Google ID token"</span>  <span class="req">// required</span>
+}</pre>
+          </div>
+          <div class="code-block">
+            <div class="code-label">Response 201</div>
+            <pre>{
+  <span class="k">"accessToken"</span>: <span class="s">"eyJhbGciOi..."</span>,
+  <span class="k">"isNewUser"</span>:  <span class="n">true</span>
+}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- HRV -->
@@ -1496,6 +1522,15 @@
   </div>
 
   <div class="enum-grid">
+    <div class="enum-card">
+      <div class="enum-name">UserRole</div>
+      <div class="enum-desc">사용자 권한 — 최초 가입은 user, 승인은 DB에서만 변경</div>
+      <div class="enum-values">
+        <span class="enum-val">user</span>
+        <span class="enum-val">researcher</span>
+        <span class="enum-val">admin</span>
+      </div>
+    </div>
     <div class="enum-card">
       <div class="enum-name">EventType</div>
       <div class="enum-desc">이벤트 종류</div>
