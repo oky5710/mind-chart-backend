@@ -91,13 +91,4 @@ export class AuthService {
     const token = this.jwt.sign({ sub: userId, email, role });
     return { accessToken: token };
   }
-
-  // iOS 단축어 등 자동화용 — 7일 만료되는 로그인 토큰과 별개로, 매번 재로그인 없이 계속 쓸 수 있는 토큰
-  issueDeviceToken(userId: string, email: string, role: UserRole) {
-    const token = this.jwt.sign(
-      { sub: userId, email, role },
-      { expiresIn: '10y' },
-    );
-    return { accessToken: token };
-  }
 }

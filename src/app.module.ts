@@ -9,8 +9,6 @@ import { DrugModule } from './drug/drug.module'
 import { ExerciseModule } from './exercise/exercise.module'
 import { CoffeeModule } from './coffee/coffee.module'
 import { MoodModule } from './mood/mood.module'
-import { WearableModule } from './wearable/wearable.module'
-import { WearableSampleModule } from './wearable-sample/wearable-sample.module'
 import { RmssdEventModule } from './rmssd-event/rmssd-event.module'
 
 @Module({
@@ -25,8 +23,6 @@ import { RmssdEventModule } from './rmssd-event/rmssd-event.module'
     ExerciseModule,
     CoffeeModule,
     MoodModule,
-    WearableModule,
-    WearableSampleModule,
     RmssdEventModule,
   ],
 })
