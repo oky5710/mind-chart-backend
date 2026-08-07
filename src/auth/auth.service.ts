@@ -6,6 +6,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { OAuth2Client } from 'google-auth-library';
+import appleSignin from 'apple-signin-auth';
 import { UserRole } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
@@ -81,6 +82,49 @@ export class AuthService {
       user = await this.prisma.user.update({
         where: { id: user.id },
         data: { googleId },
+      });
+    }
+
+    return { ...this.sign(user.id, user.email, user.role), isNewUser };
+  }
+
+  async loginWithApple(idToken: string, fullName?: string) {
+    let payload: { email?: string; sub: string } | undefined;
+    try {
+      payload = await appleSignin.verifyIdToken(idToken, {
+        audience: process.env.APPLE_CLIENT_ID,
+      });
+    } catch {
+      throw new UnauthorizedException('애플 인증에 실패했습니다');
+    }
+    if (!payload?.sub) {
+      throw new UnauthorizedException('애플 인증에 실패했습니다');
+    }
+
+    const { email, sub: appleId } = payload;
+
+    let user = await this.prisma.user.findUnique({ where: { appleId } });
+    let isNewUser = false;
+    if (!user && email) {
+      user = await this.prisma.user.findUnique({ where: { email } });
+    }
+    if (!user) {
+      // Apple이 이메일 공유를 비공개로 설정한 사용자에게는 email을 안 줄 수 있어, 그 경우엔
+      // 릴레이 주소 대신 항상 유일한 appleId 기반 자리표시 이메일을 만든다.
+      const placeholderEmail = email ?? `${appleId}@appleid.mindprofiler`;
+      user = await this.prisma.user.create({
+        data: {
+          email: placeholderEmail,
+          appleId,
+          name: fullName ?? placeholderEmail,
+          password: null,
+        },
+      });
+      isNewUser = true;
+    } else if (!user.appleId) {
+      user = await this.prisma.user.update({
+        where: { id: user.id },
+        data: { appleId },
       });
     }
 
