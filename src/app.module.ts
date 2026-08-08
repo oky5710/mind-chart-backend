@@ -10,6 +10,7 @@ import { ExerciseModule } from './exercise/exercise.module'
 import { CoffeeModule } from './coffee/coffee.module'
 import { MoodModule } from './mood/mood.module'
 import { RmssdEventModule } from './rmssd-event/rmssd-event.module'
+import { UserModule } from './user/user.module'
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { RmssdEventModule } from './rmssd-event/rmssd-event.module'
     CoffeeModule,
     MoodModule,
     RmssdEventModule,
+    UserModule,
   ],
 })
 export class AppModule {}
