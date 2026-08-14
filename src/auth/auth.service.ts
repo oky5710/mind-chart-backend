@@ -135,4 +135,15 @@ export class AuthService {
     const token = this.jwt.sign({ sub: userId, email, role });
     return { accessToken: token };
   }
+
+  // User의 모든 연관 레코드(이벤트/약 기록/기분/커피/운동/rMSSD 이벤트 등)는 스키마에서 이미
+  // onDelete: Cascade로 걸려 있어, user 행 하나만 지우면 DB가 나머지를 전부 같이 지운다.
+  // password 해시가 응답에 실리지 않도록 select로 최소 필드만 돌려준다.
+  async deleteAccount(userId: string) {
+    const user = await this.prisma.user.delete({
+      where: { id: userId },
+      select: { id: true },
+    });
+    return user;
+  }
 }
