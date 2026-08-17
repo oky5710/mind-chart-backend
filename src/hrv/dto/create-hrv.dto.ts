@@ -1,4 +1,7 @@
-import { IsDateString, IsNumber, IsOptional, IsString } from 'class-validator'
+import { IsDateString, IsIn, IsNumber, IsOptional, IsString } from 'class-validator'
+
+export const HRV_MEASUREMENT_METHODS = ['PPG', 'ECG'] as const
+export type HrvMeasurementMethod = (typeof HRV_MEASUREMENT_METHODS)[number]
 
 export class CreateHrvDto {
   @IsDateString()
@@ -12,7 +15,10 @@ export class CreateHrvDto {
   @IsString()
   memo?: string
 
-  // Time Domain Analysis
+  @IsIn(HRV_MEASUREMENT_METHODS)
+  method: HrvMeasurementMethod
+
+  // 두 측정 방식이 공유하는 값
   @IsNumber()
   mhr: number
 
@@ -20,17 +26,7 @@ export class CreateHrvDto {
   sdnn: number
 
   @IsNumber()
-  rmssd: number
-
-  @IsNumber()
-  psi: number
-
-  // Frequency Domain Analysis
-  @IsNumber()
   tp: number
-
-  @IsNumber()
-  vlf: number
 
   @IsNumber()
   lf: number
@@ -44,16 +40,37 @@ export class CreateHrvDto {
   @IsNumber()
   hfNorm: number
 
+  // ECG 전용 (Time/Frequency Domain 상세, Other)
+  @IsOptional()
   @IsNumber()
-  lfHfRatio: number
+  rmssd?: number
 
+  @IsOptional()
   @IsNumber()
-  ectopicBeat: number
+  psi?: number
 
-  // Other
+  @IsOptional()
   @IsNumber()
-  srd: number
+  vlf?: number
 
+  @IsOptional()
+  @IsNumber()
+  lfHfRatio?: number
+
+  @IsOptional()
+  @IsNumber()
+  ectopicBeat?: number
+
+  @IsOptional()
+  @IsNumber()
+  srd?: number
+
+  @IsOptional()
   @IsString()
-  result: string
+  result?: string
+
+  // PPG 전용
+  @IsOptional()
+  @IsNumber()
+  hrvIndex?: number
 }

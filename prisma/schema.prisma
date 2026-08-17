@@ -85,34 +85,44 @@ enum Sentiment {
 // ──────────────────────────────────────────
 // HRV(심박변이도) 검사 결과
 // ──────────────────────────────────────────
+// 측정 방식에 따라 결과지 항목이 다르다 — ECG(사지유도 심전도)는 병원 장비가 Time/Frequency
+// Domain 수치를 전부 뽑아주지만, PPG(손가락 맥파)는 mhr/sdnn/tp/lf/hf/lfNorm/hfNorm과
+// hrvIndex만 받는다. rmssd/psi/vlf/lfHfRatio/ectopicBeat/srd/result는 ECG 전용이라 PPG
+// 기록에서는 비워둔다(nullable).
+enum HrvMeasurementMethod {
+  PPG
+  ECG
+}
+
 model HrvAnalysis {
-  id         Int      @id @default(autoincrement())
+  id         Int                  @id @default(autoincrement())
   userId     String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   examinedAt DateTime
   hospital   String?
   memo       String?
+  method     HrvMeasurementMethod @default(ECG)
 
-  // Time Domain Analysis
-  mhr   Float
-  sdnn  Float
-  rmssd Float
-  psi   Float
+  // 두 측정 방식이 공유하는 값
+  mhr    Float
+  sdnn   Float
+  tp     Float
+  lf     Float
+  hf     Float
+  lfNorm Float
+  hfNorm Float
 
-  // Frequency Domain Analysis
-  tp  Float
-  vlf Float
-  lf  Float
-  hf  Float
+  // ECG 전용 (Time/Frequency Domain 상세, Other)
+  rmssd       Float?
+  psi         Float?
+  vlf         Float?
+  lfHfRatio   Float?
+  ectopicBeat Float?
+  srd         Float?
+  result      String?
 
-  lfNorm      Float
-  hfNorm      Float
-  lfHfRatio   Float
-  ectopicBeat Float
-
-  // Other
-  srd    Float
-  result String
+  // PPG 전용
+  hrvIndex Float?
 
   createdAt DateTime @default(now())
 }

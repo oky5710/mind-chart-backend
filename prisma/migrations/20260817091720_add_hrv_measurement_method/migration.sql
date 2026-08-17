@@ -1,0 +1,13 @@
+-- CreateEnum
+CREATE TYPE "HrvMeasurementMethod" AS ENUM ('PPG', 'ECG');
+
+-- AlterTable
+ALTER TABLE "HrvAnalysis" ADD COLUMN     "hrvIndex" DOUBLE PRECISION,
+ADD COLUMN     "method" "HrvMeasurementMethod" NOT NULL DEFAULT 'ECG',
+ALTER COLUMN "rmssd" DROP NOT NULL,
+ALTER COLUMN "psi" DROP NOT NULL,
+ALTER COLUMN "vlf" DROP NOT NULL,
+ALTER COLUMN "lfHfRatio" DROP NOT NULL,
+ALTER COLUMN "ectopicBeat" DROP NOT NULL,
+ALTER COLUMN "srd" DROP NOT NULL,
+ALTER COLUMN "result" DROP NOT NULL;
