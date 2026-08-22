@@ -360,6 +360,13 @@
   <div class="section-header" id="auth">
     <h2>인증</h2><span class="sub">Auth</span>
   </div>
+  <div class="endpoint-note" style="margin-bottom:16px">
+    액세스 토큰(JWT)은 15분만 유효하다 — 401을 받으면 재로그인 대신 아래 <code>/auth/refresh</code>로
+    조용히 새 액세스 토큰을 받는다. refresh 토큰은 30일짜리 랜덤 문자열로 DB에는 해시만 저장되며,
+    refresh할 때마다 새 refresh 토큰으로 교체(rotation)된다 — 그래서 30일 안에 한 번이라도 앱을
+    열면(=refresh가 성공하면) 로그인 유지 기간이 그만큼 다시 30일 뒤로 밀린다. 응답의
+    <code>accessToken</code>·<code>refreshToken</code>은 항상 짝으로 저장/교체해야 한다.
+  </div>
 
   <div class="endpoint-card">
     <div class="endpoint-row">
@@ -368,7 +375,7 @@
         <span class="endpoint-path">/auth/register</span>
       </div>
       <div class="endpoint-body">
-        <div class="endpoint-desc">회원가입</div>
+        <div class="endpoint-desc">회원가입(이메일/비밀번호) — 액세스·refresh 토큰 발급</div>
         <div class="code-pair">
           <div class="code-block">
             <div class="code-label">Request Body</div>
@@ -381,10 +388,8 @@
           <div class="code-block">
             <div class="code-label">Response 201</div>
             <pre>{
-  <span class="k">"id"</span>:        <span class="s">"clx..."</span>,
-  <span class="k">"email"</span>:     <span class="s">"user@example.com"</span>,
-  <span class="k">"name"</span>:      <span class="s">"홍길동"</span>,
-  <span class="k">"createdAt"</span>: <span class="s">"2024-01-01T00:00:00Z"</span>
+  <span class="k">"accessToken"</span>:  <span class="s">"eyJhbGciOi..."</span>,
+  <span class="k">"refreshToken"</span>: <span class="s">"4bbb63ba4207..."</span>
 }</pre>
           </div>
         </div>
@@ -397,7 +402,7 @@
         <span class="endpoint-path">/auth/login</span>
       </div>
       <div class="endpoint-body">
-        <div class="endpoint-desc">로그인 — JWT 액세스 토큰 발급</div>
+        <div class="endpoint-desc">이메일/비밀번호 로그인 — 액세스·refresh 토큰 발급</div>
         <div class="code-pair">
           <div class="code-block">
             <div class="code-label">Request Body</div>
@@ -409,7 +414,8 @@
           <div class="code-block">
             <div class="code-label">Response 200</div>
             <pre>{
-  <span class="k">"access_token"</span>: <span class="s">"eyJhbGciOi..."</span>
+  <span class="k">"accessToken"</span>:  <span class="s">"eyJhbGciOi..."</span>,
+  <span class="k">"refreshToken"</span>: <span class="s">"4bbb63ba4207..."</span>
 }</pre>
           </div>
         </div>
@@ -422,7 +428,7 @@
         <span class="endpoint-path">/auth/google</span>
       </div>
       <div class="endpoint-body">
-        <div class="endpoint-desc">Google 로그인 — 최초 로그인은 role=user 계정을 자동 생성하고 JWT 액세스 토큰 발급</div>
+        <div class="endpoint-desc">Google 로그인 — 최초 로그인은 role=user 계정을 자동 생성하고 액세스·refresh 토큰 발급</div>
         <div class="endpoint-note">admin·researcher 역할은 로그인 요청으로 변경할 수 없으며 DB에서 승인된 계정만 변경한다.</div>
         <div class="code-pair">
           <div class="code-block">
@@ -434,9 +440,87 @@
           <div class="code-block">
             <div class="code-label">Response 201</div>
             <pre>{
-  <span class="k">"accessToken"</span>: <span class="s">"eyJhbGciOi..."</span>,
-  <span class="k">"isNewUser"</span>:  <span class="n">true</span>
+  <span class="k">"accessToken"</span>:  <span class="s">"eyJhbGciOi..."</span>,
+  <span class="k">"refreshToken"</span>: <span class="s">"4bbb63ba4207..."</span>,
+  <span class="k">"isNewUser"</span>:    <span class="n">true</span>
 }</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint-row">
+      <div class="endpoint-meta">
+        <span class="method POST">POST</span>
+        <span class="endpoint-path">/auth/apple</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="endpoint-desc">Apple 로그인 — 최초 로그인은 role=user 계정을 자동 생성하고 액세스·refresh 토큰 발급</div>
+        <div class="endpoint-note">Apple이 이메일 공유를 비공개로 설정한 사용자는 idToken에 email이 없을 수 있다 — 이 경우 appleId 기반 자리표시 이메일을 생성한다. fullName은 Apple이 최초 인가 때만 내려준다.</div>
+        <div class="code-pair">
+          <div class="code-block">
+            <div class="code-label">Request Body</div>
+            <pre>{
+  <span class="k">"idToken"</span>:  <span class="s">"Apple identity token"</span>,  <span class="req">// required</span>
+  <span class="k">"fullName"</span>: <span class="s">"홍길동"</span>                  <span class="opt">// optional, 최초 인가 때만</span>
+}</pre>
+          </div>
+          <div class="code-block">
+            <div class="code-label">Response 201</div>
+            <pre>{
+  <span class="k">"accessToken"</span>:  <span class="s">"eyJhbGciOi..."</span>,
+  <span class="k">"refreshToken"</span>: <span class="s">"4bbb63ba4207..."</span>,
+  <span class="k">"isNewUser"</span>:    <span class="n">true</span>
+}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint-row">
+      <div class="endpoint-meta">
+        <span class="method POST">POST</span>
+        <span class="endpoint-path">/auth/refresh</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="endpoint-desc">refresh 토큰으로 액세스 토큰 재발급 — 인증 불필요(Authorization 헤더 없이 호출)</div>
+        <div class="endpoint-note">호출할 때마다 refresh 토큰도 새 값으로 교체(rotation)된다 — 응답으로 받은 refreshToken으로 반드시 갈아 끼워야 하며, 이전 refresh 토큰은 즉시 무효화된다. 만료/폐기된 토큰이면 401을 반환하고, 이때는 재로그인이 필요하다.</div>
+        <div class="code-pair">
+          <div class="code-block">
+            <div class="code-label">Request Body</div>
+            <pre>{
+  <span class="k">"refreshToken"</span>: <span class="s">"4bbb63ba4207..."</span>  <span class="req">// required</span>
+}</pre>
+          </div>
+          <div class="code-block">
+            <div class="code-label">Response 201</div>
+            <pre>{
+  <span class="k">"accessToken"</span>:  <span class="s">"eyJhbGciOi..."</span>,
+  <span class="k">"refreshToken"</span>: <span class="s">"7d93beccbe0c..."</span>
+}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint-row">
+      <div class="endpoint-meta">
+        <span class="method POST">POST</span>
+        <span class="endpoint-path">/auth/logout</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="endpoint-desc">refresh 토큰 무효화 — 인증 불필요(Authorization 헤더 없이 호출)</div>
+        <div class="endpoint-note">이미 없거나 만료된 토큰으로 호출해도 성공으로 응답한다. 액세스 토큰은 이 호출로 즉시 무효화되지 않고 남은 만료 시간(최대 15분) 동안은 그대로 쓸 수 있다 — 짧은 수명으로 이미 충분히 제한되어 있다고 본다.</div>
+        <div class="code-pair">
+          <div class="code-block">
+            <div class="code-label">Request Body</div>
+            <pre>{
+  <span class="k">"refreshToken"</span>: <span class="s">"4bbb63ba4207..."</span>  <span class="req">// required</span>
+}</pre>
+          </div>
+          <div class="code-block">
+            <div class="code-label">Response 201</div>
+            <pre>{ <span class="k">"success"</span>: <span class="n">true</span> }</pre>
           </div>
         </div>
       </div>

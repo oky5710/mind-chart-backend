@@ -33,12 +33,31 @@ model User {
   moodLogs            MoodLog[]
   rmssdEvents         RmssdEvent[]
   developerInquiries DeveloperInquiry[]
+  refreshTokens       RefreshToken[]
 }
 
 enum UserRole {
   user
   researcher
   admin
+}
+
+// ──────────────────────────────────────────
+// Refresh Token — 액세스 토큰(짧은 수명)을 조용히 재발급하기 위한 회전형 토큰.
+// 원문 토큰은 클라이언트에만 있고 DB에는 해시만 저장한다(탈취돼도 DB만으로는 못 씀).
+// 매 refresh마다 기존 행을 revoke하고 새 행을 발급해(rotation), 탈취된 토큰이 재사용되면
+// 다음 정상 refresh 때 곧바로 어긋나 감지할 수 있다.
+// ──────────────────────────────────────────
+model RefreshToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
 }
 
 model DeveloperInquiry {

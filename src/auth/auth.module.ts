@@ -10,9 +10,11 @@ import { JwtAuthGuard } from './jwt-auth.guard'
 @Module({
   imports: [
     PassportModule,
+    // 액세스 토큰은 짧게 살고(만료돼도 refresh로 조용히 재발급), 실제 로그인 유지 기간은
+    // refresh 토큰(AuthService의 REFRESH_TOKEN_TTL_MS, 30일 rotation)이 담당한다.
     JwtModule.register({
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '7d' },
+      signOptions: { expiresIn: '15m' },
     }),
   ],
   providers: [AuthService, JwtStrategy, { provide: APP_GUARD, useClass: JwtAuthGuard }],

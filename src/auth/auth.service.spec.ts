@@ -24,6 +24,9 @@ describe('AuthService Google login', () => {
         create: jest.fn().mockResolvedValue(createdUser),
         update: jest.fn(),
       },
+      refreshToken: {
+        create: jest.fn().mockResolvedValue({}),
+      },
     };
     const jwt = { sign: jest.fn().mockReturnValue('access-token') };
     const service = new AuthService(
@@ -43,7 +46,15 @@ describe('AuthService Google login', () => {
 
     await expect(service.loginWithGoogle('id-token')).resolves.toEqual({
       accessToken: 'access-token',
+      refreshToken: expect.any(String),
       isNewUser: true,
+    });
+    expect(prisma.refreshToken.create).toHaveBeenCalledWith({
+      data: {
+        userId: createdUser.id,
+        tokenHash: expect.any(String),
+        expiresAt: expect.any(Date),
+      },
     });
     expect(prisma.user.create).toHaveBeenCalledWith({
       data: {
